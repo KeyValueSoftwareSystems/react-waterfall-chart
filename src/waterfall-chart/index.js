@@ -1,3 +1,3 @@
-import WaterFallChart from "./WaterFallChart";
+import WaterFallChart from './WaterFallChart';
 
 export default WaterFallChart;

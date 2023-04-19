@@ -11,27 +11,30 @@ export default {
   }
 } as ComponentMeta<typeof Component>;
 
-const Template: ComponentStory<typeof Component> = (args) => (
-  <Component {...args} />
-);
+const Template: ComponentStory<typeof Component> = (args) => <Component {...args} />;
 
 export const WaterFallChart = Template.bind({});
 WaterFallChart.args = {
-  transactions: [{
-    label: 'Income',
-    value: 300
-  },{
-  label: 'Expense1',
-  value: -60
-},{
-  label: 'Gain1',
-  value: 200
-},{
-  label: 'Expense2',
-  value: -100
-},{
-  label: 'Gain2',
-  value: 200
-}
-]
+  transactions: [
+    {
+      label: 'Income',
+      value: 300
+    },
+    {
+      label: 'Expense1',
+      value: -60
+    },
+    {
+      label: 'Gain1',
+      value: 200
+    },
+    {
+      label: 'Expense2',
+      value: -100
+    },
+    {
+      label: 'Gain2',
+      value: 200
+    }
+  ]
 };

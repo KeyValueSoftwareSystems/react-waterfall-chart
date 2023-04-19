@@ -17,4 +17,42 @@
   height: 100%;
   width: 100%;
   display: block;
+
+  .axisLines {
+    stroke-dasharray: 1;
+    stroke: rgb(158, 158, 158);
+    stroke-width: 2;
+    transition: all 0.3s ease-in-out;
+  }
+  .hideLine {
+    opacity: 0;
+  }
+  .graphBar {
+    stroke-width: 2;
+    z-index: 1;
+    transition: all 0.3s ease-in-out;
+  }
+  .positiveGraph {
+    fill: #00B050;
+    stroke: #00B050;
+  }
+  .negativeGraph {
+    fill: #FF0000;
+    stroke: #FF0000;
+  }
+  .bridgeLine {
+    stroke: #545453;
+    stroke-width: 2;
+    z-index: 1;
+  }
+}
+.yPoints {
+  position: relative;
+  .yPoint {
+    position: absolute;
+    width: 20px;
+    font-size: 15px;
+    line-height: 18px;
+    color: #545453;
+  }
 }
