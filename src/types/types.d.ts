@@ -1,5 +1,6 @@
 export type IWaterfallGraphProps = {
   transactions: Array<ITransaction>;
+  barWidth?: number;
 };
 
 export type ITransaction = {
@@ -17,7 +18,15 @@ export type IChartElement = {
 
 export type IUseWaterfallChartReturnType = {
   chartElements: Array<IChartElement>;
-  yAxisUnitsPerPixel: number;
   yValueForZeroLine: number;
   yAxisPoints: Array<number>;
+  yAxisScale: number;
+  calculateBarWidth: ICalculateBarWidth;
 };
+
+export type IGetIntervalAndYPointsReturnType = {
+  yAxisScale: number;
+  yAxisPoints: Array<number>;
+};
+
+export type ICalculateBarWidth = (graphWidth: number) => number;

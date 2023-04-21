@@ -1,4 +1,10 @@
-import { IChartElement, ITransaction, IUseWaterfallChartReturnType } from '../types/types';
+import { DEFAULT_BAR_WIDTH, DEFAULT_PIXELS_PER_Y_UNIT } from '../constants';
+import {
+  IChartElement,
+  IGetIntervalAndYPointsReturnType,
+  ITransaction,
+  IUseWaterfallChartReturnType
+} from '../types/types';
 
 export const useWaterfallChart = (
   transactions: Array<ITransaction>,
@@ -6,33 +12,49 @@ export const useWaterfallChart = (
 ): IUseWaterfallChartReturnType => {
   const largestCumulativeVal = getLargestCumulativeSum(transactions); // this will be the highest y point in the graph
   const smallestCumulativeVal = getSmallestCumulativeSum(transactions);
-  let cumulativeSum = transactions[0]?.value || 0;
   let chartElements: Array<IChartElement> = [];
-  let yAxisUnitsPerPixel = 0;
-  let yValueForZeroLine = 0;
-  if (chartHeight && chartHeight > 0) {
-    yAxisUnitsPerPixel = (largestCumulativeVal - smallestCumulativeVal) / chartHeight;
-    yValueForZeroLine = largestCumulativeVal / yAxisUnitsPerPixel;
 
-    chartElements = transactions.map((transaction, index) => {
+  const maxLabelsCount = Math.ceil(chartHeight / DEFAULT_PIXELS_PER_Y_UNIT);
+
+  let yAxisPoints: Array<number> = [];
+  let yAxisScale = 0;
+  let lowestYAxisValue = 0;
+  let yValueForZeroLine = 0;
+
+  if (chartHeight && chartHeight > 0) {
+    const InterValAndYPoints = getIntervalAndYPoints(smallestCumulativeVal, largestCumulativeVal, maxLabelsCount);
+    yAxisPoints = InterValAndYPoints?.yAxisPoints;
+    yAxisScale = InterValAndYPoints?.yAxisScale;
+    lowestYAxisValue = InterValAndYPoints?.yAxisPoints[0];
+    // yAxisScale is the number of Y units per 30px
+    // lowestYAxisValue is the yAxisValue for origin (0, 0)
+
+    yValueForZeroLine = chartHeight - (Math.abs(lowestYAxisValue) / yAxisScale) * DEFAULT_PIXELS_PER_Y_UNIT;
+    let cumulativeSum = 0;
+
+    chartElements = transactions.map((transaction) => {
       const { label, value } = transaction;
       let yVal = 0;
-      if (value < 0 || index === 0)
-        yVal = chartHeight - cumulativeSum / yAxisUnitsPerPixel - (chartHeight - yValueForZeroLine);
-      else yVal = chartHeight - (cumulativeSum + value) / yAxisUnitsPerPixel - (chartHeight - yValueForZeroLine);
-      if (index > 0) cumulativeSum += value;
-      return {
-        name: label,
-        value,
-        yVal,
-        cumulativeSum
-      };
+      const barHeight = (value / yAxisScale) * DEFAULT_PIXELS_PER_Y_UNIT;
+      const offsetHeight = (cumulativeSum / yAxisScale) * DEFAULT_PIXELS_PER_Y_UNIT;
+      // minimum distance from zero line to the floating bar for the transaction
+      if (value < 0) {
+        yVal = yValueForZeroLine - offsetHeight;
+      } else yVal = yValueForZeroLine - (offsetHeight + barHeight);
+
+      cumulativeSum += value;
+
+      return { name: label, value, yVal, cumulativeSum };
     });
   }
-  const yAxisInterval = getAppropriateIntervals(smallestCumulativeVal, largestCumulativeVal, chartHeight);
-  const yAxisPoints = generateYPoints(smallestCumulativeVal, largestCumulativeVal, yAxisInterval);
 
-  return { chartElements, yAxisUnitsPerPixel, yValueForZeroLine, yAxisPoints };
+  const calculateBarWidth = (chartWidth: number): number => {
+    let barWidth = DEFAULT_BAR_WIDTH;
+    if (chartWidth && transactions?.length > 0) barWidth = chartWidth / (2 * transactions?.length + 1);
+    return barWidth;
+  };
+
+  return { chartElements, yValueForZeroLine, yAxisPoints, yAxisScale, calculateBarWidth };
 };
 
 function getLargestCumulativeSum(arr: Array<ITransaction>): number {
@@ -63,38 +85,48 @@ function getSmallestCumulativeSum(arr: Array<ITransaction>): number {
   return minSum;
 }
 
-
-function generateYPoints(minVal: number, maxVal: number, interval: number): Array<number> {
-  const yPoints = [];
-  for (let yPoint = minVal; yPoint <= maxVal; yPoint += interval) {
-    yPoints.push(Math.round(yPoint));
-  }
-  return yPoints;
+function roundMinVal(minVal: number, range: number): number {
+  return Math.floor(minVal / range) * range;
 }
 
+function roundMaxVal(maxVal: number, range: number): number {
+  return Math.ceil(maxVal / range) * range;
+}
 
-function getAppropriateIntervals(minVal: number, maxVal: number, chartHeight: number): number {
+function getIntervalAndYPoints(
+  minVal: number,
+  maxVal: number,
+  maxLabelsCount: number
+): IGetIntervalAndYPointsReturnType {
+  let yAxisScale = Math.pow(10, Math.ceil(Math.log10((maxVal - minVal) / maxLabelsCount)) - 1);
+  let roundedMinVal = roundMinVal(minVal, yAxisScale);
+  let roundedMaxVal = roundMaxVal(maxVal, yAxisScale);
+  let isScaleSufficient = checkIfScaleSufficient(yAxisScale, maxLabelsCount, roundedMaxVal - roundedMinVal);
 
-  const range = maxVal - minVal;
-
-  let interval = 1;
-  if (range > 0) {
-  // Calculate the order of magnitude of the range
-    const orderOfMagnitude = Math.floor(Math.log10(range));
-
-    // Set the interval based on the order of magnitude
-    interval = Math.pow(10, orderOfMagnitude - 1);
+  let isMultipleOfFiveChecked = false;
+  while (!isScaleSufficient) {
+    if (isMultipleOfFiveChecked) {
+      yAxisScale *= 2;
+      isMultipleOfFiveChecked = false;
+    } else {
+      yAxisScale = yAxisScale * 5;
+      isMultipleOfFiveChecked = true;
+    }
+    roundedMinVal = roundMinVal(minVal, yAxisScale);
+    roundedMaxVal = roundMaxVal(maxVal, yAxisScale);
+    isScaleSufficient = checkIfScaleSufficient(yAxisScale, maxLabelsCount, maxVal - roundedMinVal);
   }
 
+  const yAxisPoints = [];
+  for (let i = 0; i < maxLabelsCount; i++) {
+    const yPoint = roundedMinVal + i * yAxisScale;
+    yAxisPoints.push(yPoint);
+  }
 
-  // Desired distance between two yAxis labels (in pixels)
-  const desiredDistance = 30;
+  return { yAxisScale, yAxisPoints };
+}
 
-  // Limit the number of yAxis labels based on available height and desired distance
-  const maxLabels = Math.floor(chartHeight / desiredDistance);
-
-  // Calculate the interval by rounding up to the nearest multiple of maxLabels
-  interval = Math.ceil(interval / maxLabels) * maxLabels;
-
-  return interval;
+function checkIfScaleSufficient(scale: number, maxLabelsCount: number, valueRange: number): boolean {
+  if (scale * maxLabelsCount >= valueRange) return true;
+  return false;
 }

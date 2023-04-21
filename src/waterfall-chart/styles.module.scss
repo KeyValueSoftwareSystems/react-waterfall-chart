@@ -33,12 +33,12 @@
     transition: all 0.3s ease-in-out;
   }
   .positiveGraph {
-    fill: #00B050;
-    stroke: #00B050;
+    fill: #00b050;
+    stroke: #00b050;
   }
   .negativeGraph {
-    fill: #FF0000;
-    stroke: #FF0000;
+    fill: #ff0000;
+    stroke: #ff0000;
   }
   .bridgeLine {
     stroke: #545453;
@@ -48,11 +48,13 @@
 }
 .yPoints {
   position: relative;
+  width: 0px;
   .yPoint {
     position: absolute;
-    width: 20px;
-    font-size: 15px;
-    line-height: 18px;
+    font-size: 11px;
+    line-height: 14px;
     color: #545453;
+    right: 0px;
+    text-align: right;
   }
 }
