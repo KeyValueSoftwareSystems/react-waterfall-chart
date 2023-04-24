@@ -1,4 +1,3 @@
-import { DEFAULT_BAR_WIDTH, DEFAULT_PIXELS_PER_Y_UNIT } from '../constants';
 import {
   IChartElement,
   IGetIntervalAndYPointsReturnType,
@@ -8,13 +7,15 @@ import {
 
 export const useWaterfallChart = (
   transactions: Array<ITransaction>,
-  chartHeight: number
+  chartHeight: number,
+  yAxisPixelsPerUnit: number,
+  showFinalSummary: boolean
 ): IUseWaterfallChartReturnType => {
   const largestCumulativeVal = getLargestCumulativeSum(transactions); // this will be the highest y point in the graph
   const smallestCumulativeVal = getSmallestCumulativeSum(transactions);
   let chartElements: Array<IChartElement> = [];
 
-  const maxLabelsCount = Math.ceil(chartHeight / DEFAULT_PIXELS_PER_Y_UNIT);
+  const maxLabelsCount = Math.ceil(chartHeight / yAxisPixelsPerUnit);
 
   let yAxisPoints: Array<number> = [];
   let yAxisScale = 0;
@@ -29,14 +30,14 @@ export const useWaterfallChart = (
     // yAxisScale is the number of Y units per 30px
     // lowestYAxisValue is the yAxisValue for origin (0, 0)
 
-    yValueForZeroLine = chartHeight - (Math.abs(lowestYAxisValue) / yAxisScale) * DEFAULT_PIXELS_PER_Y_UNIT;
+    yValueForZeroLine = chartHeight - (Math.abs(lowestYAxisValue) / yAxisScale) * yAxisPixelsPerUnit;
     let cumulativeSum = 0;
 
     chartElements = transactions.map((transaction) => {
       const { label, value } = transaction;
       let yVal = 0;
-      const barHeight = (value / yAxisScale) * DEFAULT_PIXELS_PER_Y_UNIT;
-      const offsetHeight = (cumulativeSum / yAxisScale) * DEFAULT_PIXELS_PER_Y_UNIT;
+      const barHeight = (value / yAxisScale) * yAxisPixelsPerUnit;
+      const offsetHeight = (cumulativeSum / yAxisScale) * yAxisPixelsPerUnit;
       // minimum distance from zero line to the floating bar for the transaction
       if (value < 0) {
         yVal = yValueForZeroLine - offsetHeight;
@@ -44,13 +45,16 @@ export const useWaterfallChart = (
 
       cumulativeSum += value;
 
-      return { name: label, value, yVal, cumulativeSum };
+      return { name: label, value, yVal, cumulativeSum, barHeight: Math.abs(barHeight) };
     });
   }
 
   const calculateBarWidth = (chartWidth: number): number => {
-    let barWidth = DEFAULT_BAR_WIDTH;
-    if (chartWidth && transactions?.length > 0) barWidth = chartWidth / (2 * transactions?.length + 1);
+    let barWidth = 0;
+    if (chartWidth && transactions?.length > 0) {
+      if (showFinalSummary) barWidth = chartWidth / (2 * transactions?.length + 2);
+      else barWidth = chartWidth / (2 * transactions?.length + 1);
+    }
     return barWidth;
   };
 
@@ -100,7 +104,7 @@ function getIntervalAndYPoints(
 ): IGetIntervalAndYPointsReturnType {
   let yAxisScale = Math.pow(10, Math.ceil(Math.log10((maxVal - minVal) / maxLabelsCount)) - 1);
   let roundedMinVal = roundMinVal(minVal, yAxisScale);
-  let roundedMaxVal = roundMaxVal(maxVal, yAxisScale);
+  const roundedMaxVal = roundMaxVal(maxVal, yAxisScale);
   let isScaleSufficient = checkIfScaleSufficient(yAxisScale, maxLabelsCount, roundedMaxVal - roundedMinVal);
 
   let isMultipleOfFiveChecked = false;
@@ -113,7 +117,6 @@ function getIntervalAndYPoints(
       isMultipleOfFiveChecked = true;
     }
     roundedMinVal = roundMinVal(minVal, yAxisScale);
-    roundedMaxVal = roundMaxVal(maxVal, yAxisScale);
     isScaleSufficient = checkIfScaleSufficient(yAxisScale, maxLabelsCount, maxVal - roundedMinVal);
   }
 
@@ -127,6 +130,7 @@ function getIntervalAndYPoints(
 }
 
 function checkIfScaleSufficient(scale: number, maxLabelsCount: number, valueRange: number): boolean {
+  if (maxLabelsCount === 0) return true; // to stop the while loop from checking for sufficient scale with zero maxLabelsCount
   if (scale * maxLabelsCount >= valueRange) return true;
   return false;
 }

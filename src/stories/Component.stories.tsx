@@ -12,7 +12,7 @@ export default {
 } as ComponentMeta<typeof Component>;
 
 const Template: ComponentStory<typeof Component> = (args) => (
-  <div style={{ width: '100%', height: '100%', padding: '10% 20%' }}>
+  <div style={{ width: '100%', height: '100%', padding: '100px 200px' }}>
     <Component {...args} />
   </div>
 );

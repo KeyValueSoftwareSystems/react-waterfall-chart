@@ -32,6 +32,10 @@
     z-index: 1;
     transition: all 0.3s ease-in-out;
   }
+  .summaryGraphBar {
+    fill: #076aff;
+    stroke: #076aff;
+  }
   .positiveGraph {
     fill: #00b050;
     stroke: #00b050;
@@ -56,5 +60,18 @@
     color: #545453;
     right: 0px;
     text-align: right;
+  }
+}
+
+.xPoints {
+  position: relative;
+  height: 0px;
+  .xPoint {
+    position: absolute;
+    font-size: 11px;
+    line-height: 14px;
+    color: #545453;
+    top: 5px;
+    text-align: center;
   }
 }

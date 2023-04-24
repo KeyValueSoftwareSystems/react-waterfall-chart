@@ -3,10 +3,27 @@ import { IWaterfallGraphProps } from '../types/types';
 import { useWaterfallChart } from './utils';
 import styles from './styles.module.scss';
 import '../index.css';
-import { DEFAULT_BAR_WIDTH, DEFAULT_PIXELS_PER_Y_UNIT } from '../constants';
+import { DEFAULT_BAR_WIDTH,
+  DEFAULT_PIXELS_PER_Y_UNIT,
+  DEFAULT_SUMMARY_LABEL,
+  FINAL_SUMMARY_GRAPH_KEY,
+  FINAL_SUMMARY_X_LABEL_KEY
+} from '../constants';
 
 const WaterFallChart: FC<IWaterfallGraphProps> = (props) => {
-  const { transactions, barWidth } = props;
+  const {
+    transactions,
+    barWidth,
+    showBridgeLines = true,
+    showYAxisScaleLines = false,
+    yAxisPixelsPerUnit = DEFAULT_PIXELS_PER_Y_UNIT,
+    showFinalSummary = true,
+    summaryXLabel = DEFAULT_SUMMARY_LABEL,
+    summaryBarStyles = {},
+    positiveBarStyles = {},
+    negativeBarStyles = {},
+    onChartClick
+  } = props;
 
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const [wrapperHeight, setWrapperHeight] = useState(0);
@@ -14,14 +31,16 @@ const WaterFallChart: FC<IWaterfallGraphProps> = (props) => {
 
   const { chartElements, yValueForZeroLine, yAxisPoints, yAxisScale, calculateBarWidth } = useWaterfallChart(
     transactions,
-    wrapperHeight
+    wrapperHeight,
+    yAxisPixelsPerUnit,
+    showFinalSummary
   );
 
   useEffect(() => {
     const onWrapperDimensionsChange = (): void => {
       if (wrapperRef.current) {
         setWrapperHeight(wrapperRef?.current?.offsetHeight);
-        if (!barWidth) setBarWidthVal(calculateBarWidth(wrapperRef?.current?.offsetWidth));
+        if (!barWidth || barWidth <= 0 ) setBarWidthVal(calculateBarWidth(wrapperRef?.current?.offsetWidth));
       }
     };
 
@@ -32,6 +51,30 @@ const WaterFallChart: FC<IWaterfallGraphProps> = (props) => {
     return () => window.removeEventListener('resize', onWrapperDimensionsChange);
   }, [barWidth, calculateBarWidth]);
 
+  const renderSummaryBar = (): JSX.Element => {
+    const value = Math.abs(chartElements[chartElements?.length - 1]?.cumulativeSum);
+    const barHeight =  Math.abs((value/ yAxisScale) * yAxisPixelsPerUnit);
+    const chartElement = {
+      name: summaryXLabel,
+      value,
+      yVal: yValueForZeroLine - (value / yAxisScale) * yAxisPixelsPerUnit,
+      cumulativeSum: 0,
+      barHeight: barHeight
+    }
+
+    return (
+      <rect
+        key={FINAL_SUMMARY_GRAPH_KEY}
+        width={barWidthVal}
+        height={chartElement?.barHeight}
+        y={chartElement?.yVal}
+        x={(2 * chartElements?.length + 1 ) * barWidthVal}
+        className={`${styles.graphBar} ${styles.summaryGraphBar}`}
+        onClick={(): void => onChartClick && onChartClick(chartElement)}
+      />
+    )
+  };
+
   return (
     <div ref={wrapperRef} className={styles.chartWrapper}>
       <svg className={styles.svgContainer}>
@@ -39,14 +82,14 @@ const WaterFallChart: FC<IWaterfallGraphProps> = (props) => {
         <line x1='0' y1='0' x2='0' y2='100%' className={styles.axisLines} />
         {/* x-axis */}
         <line x1='0' y1='100%' x2='100%' y2='100%' className={styles.axisLines} />
-        {/* zero line if negative values present */}
-        {yAxisPoints?.map((yPoint, index) => (
+        {/*y axis scale lines */}
+        {showYAxisScaleLines && yAxisPoints?.map((yPoint, index) => (
           <line
             key={yPoint}
             x1='0'
-            y1={wrapperHeight - index * DEFAULT_PIXELS_PER_Y_UNIT}
+            y1={wrapperHeight - index * yAxisPixelsPerUnit}
             x2='100%'
-            y2={wrapperHeight - index * DEFAULT_PIXELS_PER_Y_UNIT}
+            y2={wrapperHeight - index * yAxisPixelsPerUnit}
             className={`${styles.axisLines}`}
           />
         ))}
@@ -55,36 +98,60 @@ const WaterFallChart: FC<IWaterfallGraphProps> = (props) => {
             <rect
               key={chartElement?.name}
               width={barWidthVal}
-              height={(Math.abs(chartElement?.value) / yAxisScale) * DEFAULT_PIXELS_PER_Y_UNIT}
+              height={chartElement?.barHeight}
               y={chartElement?.yVal}
               x={(2 * index + 1) * barWidthVal}
               className={`${styles.graphBar} ${chartElement?.value >= 0 ? styles.positiveGraph : styles.negativeGraph}`}
+              style={chartElement?.value >= 0 ? positiveBarStyles : negativeBarStyles}
+              onClick={(): void => onChartClick && onChartClick(chartElement)}
             />
-            <line
-              key={chartElement?.name}
-              x1={(2 * index + 2) * barWidthVal}
-              y1={
-                wrapperHeight -
-                (chartElement?.cumulativeSum / yAxisScale) * DEFAULT_PIXELS_PER_Y_UNIT -
-                (wrapperHeight - yValueForZeroLine)
-              }
-              x2={(2 * index + 3) * barWidthVal}
-              y2={
-                wrapperHeight -
-                (chartElement?.cumulativeSum / yAxisScale) * DEFAULT_PIXELS_PER_Y_UNIT -
-                (wrapperHeight - yValueForZeroLine)
-              }
-              className={styles.bridgeLine}
-            />
+            {showBridgeLines
+            && (showFinalSummary
+            ||index !== chartElements?.length - 1)
+            && (
+              <line
+                key={chartElement?.name}
+                className={styles.bridgeLine}
+                x1={(2 * index + 2) * barWidthVal}
+                y1={yValueForZeroLine - (chartElement?.cumulativeSum / yAxisScale) * yAxisPixelsPerUnit}
+                x2={(2 * index + 3) * barWidthVal}
+                y2={yValueForZeroLine - (chartElement?.cumulativeSum / yAxisScale) * yAxisPixelsPerUnit}
+              />
+            )}
           </>
         ))}
+        {showFinalSummary && renderSummaryBar()}
       </svg>
       <div className={styles.yPoints}>
         {yAxisPoints?.map((yAxisPoint, index) => (
-          <div key={yAxisPoint} className={styles.yPoint} style={{ bottom: index * DEFAULT_PIXELS_PER_Y_UNIT - 8 }}>
+          <div
+            key={yAxisPoint}
+            className={styles.yPoint}
+            style={{ bottom: index * yAxisPixelsPerUnit - 8 }}
+          >
             {yAxisPoint}
           </div>
         ))}
+      </div>
+      <div className={styles.xPoints}>
+        {transactions?.map((transaction, index) => (
+          <div
+            key={transaction?.label}
+            className={styles.xPoint}
+            style={{ left: (2 * index + 1.25) * barWidthVal }}
+          >
+            {transaction?.label}
+          </div>
+        ))}
+        {showFinalSummary && (
+          <div
+            key={FINAL_SUMMARY_X_LABEL_KEY}
+            className={styles.xPoint}
+            style={{ ...summaryBarStyles, left: (2 * chartElements?.length + 1.25) * barWidthVal }}
+          >
+            {summaryXLabel}
+          </div>
+        )}
       </div>
     </div>
   );

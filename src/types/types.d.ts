@@ -1,6 +1,17 @@
+import { CSSProperties } from "react";
+
 export type IWaterfallGraphProps = {
   transactions: Array<ITransaction>;
   barWidth?: number;
+  showBridgeLines?  : boolean;
+  showYAxisScaleLines?: boolean;
+  yAxisPixelsPerUnit?: number;
+  showFinalSummary?: boolean;
+  summaryXLabel?: string;
+  summaryBarStyles?: CSSProperties;
+  positiveBarStyles?: CSSProperties;
+  negativeBarStyles?: CSSProperties;
+  onChartClick?: IOnChartClick;
 };
 
 export type ITransaction = {
@@ -14,6 +25,7 @@ export type IChartElement = {
   value: number;
   yVal: number;
   cumulativeSum: number;
+  barHeight: number;
 };
 
 export type IUseWaterfallChartReturnType = {
@@ -30,3 +42,10 @@ export type IGetIntervalAndYPointsReturnType = {
 };
 
 export type ICalculateBarWidth = (graphWidth: number) => number;
+
+export type IOnChartClick = (chartElement: IChartElement | { name: 'summary'}) => void;
+
+export enum chartTypes {
+  transaction,
+  summary
+}
