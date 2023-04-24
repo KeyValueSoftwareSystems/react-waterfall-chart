@@ -1,9 +1,9 @@
-import { CSSProperties } from "react";
+import { CSSProperties } from 'react';
 
 export type IWaterfallGraphProps = {
   transactions: Array<ITransaction>;
   barWidth?: number;
-  showBridgeLines?  : boolean;
+  showBridgeLines?: boolean;
   showYAxisScaleLines?: boolean;
   yAxisPixelsPerUnit?: number;
   showFinalSummary?: boolean;
@@ -43,7 +43,7 @@ export type IGetIntervalAndYPointsReturnType = {
 
 export type ICalculateBarWidth = (graphWidth: number) => number;
 
-export type IOnChartClick = (chartElement: IChartElement | { name: 'summary'}) => void;
+export type IOnChartClick = (chartElement: IChartElement) => void;
 
 export enum chartTypes {
   transaction,

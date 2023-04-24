@@ -6,4 +6,4 @@ export const DEFAULT_SUMMARY_LABEL = 'Total';
 
 export const FINAL_SUMMARY_GRAPH_KEY = 'final-summary-bar';
 
-export const FINAL_SUMMARY_X_LABEL_KEY = 'final-summary-x-point'
+export const FINAL_SUMMARY_X_LABEL_KEY = 'final-summary-x-point';

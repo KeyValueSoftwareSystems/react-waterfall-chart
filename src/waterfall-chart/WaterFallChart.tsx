@@ -3,7 +3,8 @@ import { IWaterfallGraphProps } from '../types/types';
 import { useWaterfallChart } from './utils';
 import styles from './styles.module.scss';
 import '../index.css';
-import { DEFAULT_BAR_WIDTH,
+import {
+  DEFAULT_BAR_WIDTH,
   DEFAULT_PIXELS_PER_Y_UNIT,
   DEFAULT_SUMMARY_LABEL,
   FINAL_SUMMARY_GRAPH_KEY,
@@ -40,7 +41,7 @@ const WaterFallChart: FC<IWaterfallGraphProps> = (props) => {
     const onWrapperDimensionsChange = (): void => {
       if (wrapperRef.current) {
         setWrapperHeight(wrapperRef?.current?.offsetHeight);
-        if (!barWidth || barWidth <= 0 ) setBarWidthVal(calculateBarWidth(wrapperRef?.current?.offsetWidth));
+        if (!barWidth || barWidth <= 0) setBarWidthVal(calculateBarWidth(wrapperRef?.current?.offsetWidth));
       }
     };
 
@@ -53,14 +54,14 @@ const WaterFallChart: FC<IWaterfallGraphProps> = (props) => {
 
   const renderSummaryBar = (): JSX.Element => {
     const value = Math.abs(chartElements[chartElements?.length - 1]?.cumulativeSum);
-    const barHeight =  Math.abs((value/ yAxisScale) * yAxisPixelsPerUnit);
+    const barHeight = Math.abs((value / yAxisScale) * yAxisPixelsPerUnit);
     const chartElement = {
       name: summaryXLabel,
       value,
       yVal: yValueForZeroLine - (value / yAxisScale) * yAxisPixelsPerUnit,
       cumulativeSum: 0,
       barHeight: barHeight
-    }
+    };
 
     return (
       <rect
@@ -68,11 +69,11 @@ const WaterFallChart: FC<IWaterfallGraphProps> = (props) => {
         width={barWidthVal}
         height={chartElement?.barHeight}
         y={chartElement?.yVal}
-        x={(2 * chartElements?.length + 1 ) * barWidthVal}
+        x={(2 * chartElements?.length + 1) * barWidthVal}
         className={`${styles.graphBar} ${styles.summaryGraphBar}`}
         onClick={(): void => onChartClick && onChartClick(chartElement)}
       />
-    )
+    );
   };
 
   return (
@@ -105,10 +106,7 @@ const WaterFallChart: FC<IWaterfallGraphProps> = (props) => {
               style={chartElement?.value >= 0 ? positiveBarStyles : negativeBarStyles}
               onClick={(): void => onChartClick && onChartClick(chartElement)}
             />
-            {showBridgeLines
-            && (showFinalSummary
-            ||index !== chartElements?.length - 1)
-            && (
+            {showBridgeLines && (showFinalSummary || index !== chartElements?.length - 1) && (
               <line
                 key={chartElement?.name}
                 className={styles.bridgeLine}
