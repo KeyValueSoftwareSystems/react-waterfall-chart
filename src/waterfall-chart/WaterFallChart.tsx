@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useRef, useState } from 'react';
 import { IWaterfallGraphProps } from '../types/types';
 import useWaterfallChart from './useWaterFallChart';
-import styles from './styles.module.scss';
+import classes from './styles.module.scss';
 
 import {
   DEFAULT_BAR_WIDTH,
@@ -20,9 +20,7 @@ const WaterFallChart: FC<IWaterfallGraphProps> = (props) => {
     yAxisPixelsPerUnit = DEFAULT_PIXELS_PER_Y_UNIT,
     showFinalSummary = true,
     summaryXLabel = DEFAULT_SUMMARY_LABEL,
-    summaryBarStyles = {},
-    positiveBarStyles = {},
-    negativeBarStyles = {},
+    styles = {},
     onChartClick
   } = props;
 
@@ -63,12 +61,12 @@ const WaterFallChart: FC<IWaterfallGraphProps> = (props) => {
   };
 
   return (
-    <div ref={wrapperRef} className={styles.chartWrapper}>
-      <svg className={styles.svgContainer}>
+    <div ref={wrapperRef} className={classes.chartWrapper}>
+      <svg className={classes.svgContainer}>
         {/* y-axis */}
-        <line x1='0' y1='0' x2='0' y2='100%' className={styles.axisLines} id='yAxisLine' />
+        <line x1='0' y1='0' x2='0' y2='100%' className={classes.axisLines} id='yAxisLine' />
         {/* x-axis */}
-        <line x1='0' y1='100%' x2='100%' y2='100%' className={styles.axisLines} id='xAxisLine' />
+        <line x1='0' y1='100%' x2='100%' y2='100%' className={classes.axisLines} id='xAxisLine' />
         {/*y axis scale lines */}
         {showYAxisScaleLines && yAxisPoints?.map((yPoint, index) => (
           <line
@@ -77,7 +75,7 @@ const WaterFallChart: FC<IWaterfallGraphProps> = (props) => {
             y1={wrapperHeight - index * yAxisPixelsPerUnit}
             x2='100%'
             y2={wrapperHeight - index * yAxisPixelsPerUnit}
-            className={`${styles.yAxisScaleLines}`}
+            className={`${classes.yAxisScaleLines}`}
             id={`yAxisScaleLine-${index}`}
           />
         ))}
@@ -89,15 +87,15 @@ const WaterFallChart: FC<IWaterfallGraphProps> = (props) => {
               height={chartElement?.barHeight}
               y={chartElement?.yVal}
               x={(2 * index + 1) * barWidthVal}
-              className={`${styles.graphBar} ${chartElement?.value >= 0 ? styles.positiveGraph : styles.negativeGraph}`}
-              style={chartElement?.value >= 0 ? positiveBarStyles : negativeBarStyles}
+              className={`${classes.graphBar} ${chartElement?.value >= 0 ? classes.positiveGraph : classes.negativeGraph}`}
+              style={chartElement?.value >= 0 ? styles?.positiveBar : styles?.negativeBar}
               onClick={(): void => onChartClick && onChartClick(chartElement)}
               id={`chartBar-${index}`}
             />
             {showBridgeLines && (showFinalSummary || index !== chartElements?.length - 1) && (
               <line
                 key={`${chartElement?.name}-bridge-line`}
-                className={styles.bridgeLine}
+                className={classes.bridgeLine}
                 x1={(2 * index + 2) * barWidthVal}
                 y1={yValueForZeroLine - (chartElement?.cumulativeSum / yAxisScale) * yAxisPixelsPerUnit}
                 x2={(2 * index + 3) * barWidthVal}
@@ -114,28 +112,28 @@ const WaterFallChart: FC<IWaterfallGraphProps> = (props) => {
             height={summaryChartElement?.barHeight}
             y={summaryChartElement?.yVal}
             x={(2 * chartElements?.length + 1) * barWidthVal}
-            className={`${styles.graphBar} ${styles.summaryGraphBar}`}
+            className={`${classes.graphBar} ${classes.summaryGraphBar}`}
             onClick={(): void => onChartClick && onChartClick(summaryChartElement)}
             id='summaryBar'
           />
         )}
       </svg>
-      <div className={styles.yPoints}>
+      <div className={classes.yPoints}>
         {yAxisPoints?.map((yAxisPoint, index) => (
           <div
             key={yAxisPoint}
-            className={styles.yPoint}
+            className={classes.yPoint}
             style={{ bottom: index * yAxisPixelsPerUnit - 7 }}
           >
             {yAxisPoint}
           </div>
         ))}
       </div>
-      <div className={styles.xPoints}>
+      <div className={classes.xPoints}>
         {transactions?.map((transaction, index) => (
           <div
             key={transaction?.label}
-            className={styles.xPoint}
+            className={classes.xPoint}
             style={{ left: (2 * index + 1.25) * barWidthVal }}
             // the 1.25 is to reduce chances for the label to overflow to right
           >
@@ -145,8 +143,8 @@ const WaterFallChart: FC<IWaterfallGraphProps> = (props) => {
         {showFinalSummary && (
           <div
             key={FINAL_SUMMARY_X_LABEL_KEY}
-            className={styles.xPoint}
-            style={{ ...summaryBarStyles, left: (2 * chartElements?.length + 1.25) * barWidthVal }}
+            className={classes.xPoint}
+            style={{ ...styles?.summaryBar, left: (2 * chartElements?.length + 1.25) * barWidthVal }}
           >
             {summaryXLabel}
           </div>

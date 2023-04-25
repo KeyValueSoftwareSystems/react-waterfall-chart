@@ -1,17 +1,13 @@
-  
-
-  
-
 # React Waterfall Chart
 
   
 
-<a  href="https://www.npmjs.com/package/react-waterfall-chart"><img  src="https://badgen.net/npm/v/react-waterfall-chart?color=blue"  alt="npm version"></a>  <a  href="https://www.npmjs.com/package/react-waterfall-chart"  ><img  src="https://img.shields.io/npm/dw/react-waterfall-chart?label=Downloads"  /></a>  <a  href="https://github.com/KeyValueSoftwareSystems/react-waterfall-chart"><img  src="https://github.com/KeyValueSoftwareSystems/react-waterfall-chart/actions/workflows/deploy.yml/badge.svg"  alt=""  /></a>
+<a  href="https://www.npmjs.com/package/@keyvaluesystems/react-waterfall-chart"><img  src="https://badgen.net/npm/v/@keyvaluesystems/react-waterfall-chart?color=blue"  alt="npm version"></a>  <a  href="https://www.npmjs.com/package/@keyvaluesystems/react-waterfall-chart"  ><img  src="https://img.shields.io/npm/dw/@keyvaluesystems/react-waterfall-chart?label=Downloads"  /></a>  <a  href="https://github.com/KeyValueSoftwareSystems/react-waterfall-chart"><img  src="https://github.com/KeyValueSoftwareSystems/react-waterfall-chart/actions/workflows/deploy.yml/badge.svg"  alt=""  /></a>
 
   
 
 <div  align="center">
-<img  src="src/assets/waterfall-chart-example.png"  alt=""  width="735"  height="401"/>
+<img  src="src/assets/waterfall-chart-example.png"  alt=""  width="784"  height="414"/>
 </div>
 
   
