@@ -8,10 +8,14 @@ export type IWaterfallGraphProps = {
   yAxisPixelsPerUnit?: number;
   showFinalSummary?: boolean;
   summaryXLabel?: string;
-  summaryBarStyles?: CSSProperties;
-  positiveBarStyles?: CSSProperties;
-  negativeBarStyles?: CSSProperties;
+  styles?: ICustomizationStyles;
   onChartClick?: IOnChartClick;
+};
+
+export type ICustomizationStyles = {
+  summaryBar?: CSSProperties;
+  positiveBar?: CSSProperties;
+  negativeBar?: CSSProperties;
 };
 
 export type ITransaction = {

@@ -15,9 +15,7 @@
       "strictNullChecks": true,
       "esModuleInterop": true
     },
-    "files": [
-      "global.d.ts"
-    ],
+    "files": ["global.d.ts"],
     "include": ["src"],
     "exclude": ["src/**/tests"],
 }

@@ -19,6 +19,12 @@
   display: block;
 
   .axisLines {
+    stroke: rgb(158, 158, 158);
+    stroke-width: 2;
+    transition: all 0.3s ease-in-out;
+  }
+
+  .yAxisScaleLines {
     stroke-dasharray: 1;
     stroke: rgb(158, 158, 158);
     stroke-width: 2;
@@ -33,20 +39,20 @@
     transition: all 0.3s ease-in-out;
   }
   .summaryGraphBar {
-    fill: #076aff;
-    stroke: #076aff;
+    fill: #3498db;
+    stroke: #3498db;
   }
   .positiveGraph {
-    fill: #00b050;
-    stroke: #00b050;
+    fill: #2ecc71;
+    stroke: #2ecc71;
   }
   .negativeGraph {
-    fill: #ff0000;
-    stroke: #ff0000;
+    fill: #e74c3c;
+    stroke: #e74c3c;
   }
   .bridgeLine {
-    stroke: #545453;
-    stroke-width: 2;
+    stroke: #7f8c8d;
+    stroke-width: 1;
     z-index: 1;
   }
 }
@@ -58,7 +64,7 @@
     font-size: 11px;
     line-height: 14px;
     color: #545453;
-    right: 0px;
+    right: 3px;
     text-align: right;
   }
 }
@@ -71,7 +77,7 @@
     font-size: 11px;
     line-height: 14px;
     color: #545453;
-    top: 5px;
+    top: 3px;
     text-align: center;
   }
 }
