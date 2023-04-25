@@ -8,7 +8,7 @@ export type IWaterfallGraphProps = {
   yAxisPixelsPerUnit?: number;
   showFinalSummary?: boolean;
   summaryXLabel?: string;
-  styles: ICustomizationStyles;
+  styles?: ICustomizationStyles;
   onChartClick?: IOnChartClick;
 };
 
