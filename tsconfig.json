@@ -9,7 +9,6 @@
       "sourceMap": true,
       "noEmit": false,
       "declaration": true,
-      "suppressImplicitAnyIndexErrors": true,
       "allowSyntheticDefaultImports": true,
       "lib": ["es2018", "dom"],
       "moduleResolution": "node",

@@ -1,0 +1,77 @@
+#root {
+  width: 100%;
+  height: 100%;
+}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+.chartWrapper {
+  height: calc(100% - 40px);
+  width: calc(100% - 40px);
+  margin: 20px;
+}
+
+.svgContainer {
+  height: 100%;
+  width: 100%;
+  display: block;
+
+  .axisLines {
+    stroke-dasharray: 1;
+    stroke: rgb(158, 158, 158);
+    stroke-width: 2;
+    transition: all 0.3s ease-in-out;
+  }
+  .hideLine {
+    opacity: 0;
+  }
+  .graphBar {
+    stroke-width: 2;
+    z-index: 1;
+    transition: all 0.3s ease-in-out;
+  }
+  .summaryGraphBar {
+    fill: #076aff;
+    stroke: #076aff;
+  }
+  .positiveGraph {
+    fill: #00b050;
+    stroke: #00b050;
+  }
+  .negativeGraph {
+    fill: #ff0000;
+    stroke: #ff0000;
+  }
+  .bridgeLine {
+    stroke: #545453;
+    stroke-width: 2;
+    z-index: 1;
+  }
+}
+.yPoints {
+  position: relative;
+  width: 0px;
+  .yPoint {
+    position: absolute;
+    font-size: 11px;
+    line-height: 14px;
+    color: #545453;
+    right: 0px;
+    text-align: right;
+  }
+}
+
+.xPoints {
+  position: relative;
+  height: 0px;
+  .xPoint {
+    position: absolute;
+    font-size: 11px;
+    line-height: 14px;
+    color: #545453;
+    top: 5px;
+    text-align: center;
+  }
+}
