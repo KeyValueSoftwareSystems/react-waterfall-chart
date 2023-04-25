@@ -9,7 +9,7 @@
     "start": "webpack watch && tsc",
     "build": "webpack && tsc",
     "eslint": "eslint src",
-    "test": "jest --config ./jest.config.js",
+    "test": "jest --config ./jest.config.ts",
     "coverage": "npm run test -- --coverage",
     "trypublish": "npm publish || true",
     "storybook": "start-storybook -p 6006",
@@ -73,6 +73,7 @@
     "terser-webpack-plugin": "^5.3.5",
     "ts-jest": "^29.0.5",
     "ts-loader": "^9.4.2",
+    "ts-node": "^10.9.1",
     "typescript": "^4.9.5",
     "url-loader": "^4.1.1",
     "webpack": "^5.75.0",
@@ -88,24 +89,6 @@
   "files": [
     "build"
   ],
-  "jest": {
-    "moduleNameMapper": {
-      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/scripts/testMock.js",
-      "\\.(css|less)$": "<rootDir>/scripts/testMock.js"
-    },
-    "moduleFileExtensions": [
-      "web.js",
-      "js",
-      "web.ts",
-      "ts",
-      "web.tsx",
-      "tsx",
-      "json",
-      "web.jsx",
-      "jsx",
-      "node"
-    ]
-  },
   "bugs": {
     "url": "https://github.com/KeyValueSoftwareSystems/react-vertical-stepper/issues"
   },

@@ -47,5 +47,6 @@ WaterFallChart.args = {
       label: 'Acquisitions',
       value: 80
     }
-  ]
+  ],
+  onChartClick: (e: any) => console.log(e)
 };

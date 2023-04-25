@@ -66,9 +66,9 @@ const WaterFallChart: FC<IWaterfallGraphProps> = (props) => {
     <div ref={wrapperRef} className={styles.chartWrapper}>
       <svg className={styles.svgContainer}>
         {/* y-axis */}
-        <line x1='0' y1='0' x2='0' y2='100%' className={styles.axisLines} />
+        <line x1='0' y1='0' x2='0' y2='100%' className={styles.axisLines} id='yAxisLine' />
         {/* x-axis */}
-        <line x1='0' y1='100%' x2='100%' y2='100%' className={styles.axisLines} />
+        <line x1='0' y1='100%' x2='100%' y2='100%' className={styles.axisLines} id='xAxisLine' />
         {/*y axis scale lines */}
         {showYAxisScaleLines && yAxisPoints?.map((yPoint, index) => (
           <line
@@ -77,7 +77,8 @@ const WaterFallChart: FC<IWaterfallGraphProps> = (props) => {
             y1={wrapperHeight - index * yAxisPixelsPerUnit}
             x2='100%'
             y2={wrapperHeight - index * yAxisPixelsPerUnit}
-            className={`${styles.axisLines}`}
+            className={`${styles.yAxisScaleLines}`}
+            id={`yAxisScaleLine-${index}`}
           />
         ))}
         {chartElements?.map((chartElement, index) => (
@@ -91,6 +92,7 @@ const WaterFallChart: FC<IWaterfallGraphProps> = (props) => {
               className={`${styles.graphBar} ${chartElement?.value >= 0 ? styles.positiveGraph : styles.negativeGraph}`}
               style={chartElement?.value >= 0 ? positiveBarStyles : negativeBarStyles}
               onClick={(): void => onChartClick && onChartClick(chartElement)}
+              id={`chartBar-${index}`}
             />
             {showBridgeLines && (showFinalSummary || index !== chartElements?.length - 1) && (
               <line
@@ -100,11 +102,12 @@ const WaterFallChart: FC<IWaterfallGraphProps> = (props) => {
                 y1={yValueForZeroLine - (chartElement?.cumulativeSum / yAxisScale) * yAxisPixelsPerUnit}
                 x2={(2 * index + 3) * barWidthVal}
                 y2={yValueForZeroLine - (chartElement?.cumulativeSum / yAxisScale) * yAxisPixelsPerUnit}
+                id={`chartBarBridgeLine-${index}`}
               />
             )}
           </>
         ))}
-        {showFinalSummary && (
+        {showFinalSummary && summaryBarHeight > 0 && (
           <rect
             key={FINAL_SUMMARY_GRAPH_KEY}
             width={barWidthVal}
@@ -113,6 +116,7 @@ const WaterFallChart: FC<IWaterfallGraphProps> = (props) => {
             x={(2 * chartElements?.length + 1) * barWidthVal}
             className={`${styles.graphBar} ${styles.summaryGraphBar}`}
             onClick={(): void => onChartClick && onChartClick(summaryChartElement)}
+            id="summaryBar"
           />
         )}
       </svg>
@@ -121,7 +125,7 @@ const WaterFallChart: FC<IWaterfallGraphProps> = (props) => {
           <div
             key={yAxisPoint}
             className={styles.yPoint}
-            style={{ bottom: index * yAxisPixelsPerUnit - 8 }}
+            style={{ bottom: index * yAxisPixelsPerUnit - 7 }}
           >
             {yAxisPoint}
           </div>
