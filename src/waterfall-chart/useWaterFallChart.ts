@@ -1,5 +1,5 @@
-import { IChartElement, ITransaction, IUseWaterfallChartReturnType } from "../types/types";
-import { getIntervalAndYPoints, getLargestCumulativeSum, getSmallestCumulativeSum } from "./utils";
+import { IChartElement, ITransaction, IUseWaterfallChartReturnType } from '../types/types';
+import { getIntervalAndYPoints, getLargestCumulativeSum, getSmallestCumulativeSum } from './utils';
 
 const useWaterfallChart = (
   transactions: Array<ITransaction>,

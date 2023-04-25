@@ -1,7 +1,4 @@
-import {
-  IGetIntervalAndYPointsReturnType,
-  ITransaction
-} from '../types/types';
+import { IGetIntervalAndYPointsReturnType, ITransaction } from '../types/types';
 
 export function getLargestCumulativeSum(arr: Array<ITransaction>): number {
   let maxSum = arr[0]?.value; // Initialize maxSum and currentSum with the first element of the array
