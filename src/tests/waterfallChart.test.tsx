@@ -7,10 +7,10 @@ import WaterFallChart from '../waterfall-chart';
 const transactions = [
   { label: 'Transaction 1', value: 100 },
   { label: 'Transaction 2', value: -50 },
-  { label: 'Transaction 3', value: 200 },
+  { label: 'Transaction 3', value: 200 }
 ];
 
-describe('WaterFallChart component',() => {
+describe('WaterFallChart component', () => {
   it('renders the chart with correct bars and labels', () => {
     // Render the WaterFallChart component with transactions as props
     const { container, getByText } = render(<WaterFallChart transactions={transactions} />);
@@ -19,9 +19,9 @@ describe('WaterFallChart component',() => {
     const positiveBar = container.querySelector('#chartBar-0');
     const negativeBar = container.querySelector('#chartBar-1');
     const summaryBar = container.querySelector('#summaryBar');
-    if(positiveBar) expect(positiveBar).toHaveAttribute('height', '50');
-    if(negativeBar) expect(negativeBar).toHaveAttribute('height', '25');
-    if(summaryBar) expect(summaryBar).toHaveAttribute('height', '75');
+    if (positiveBar) expect(positiveBar).toHaveAttribute('height', '50');
+    if (negativeBar) expect(negativeBar).toHaveAttribute('height', '25');
+    if (summaryBar) expect(summaryBar).toHaveAttribute('height', '75');
 
     // Assert that the x-axis and y-axis lines are rendered
     const xAxisLine = container.querySelector('#xAxisLine');
@@ -39,7 +39,9 @@ describe('WaterFallChart component',() => {
     const mockOnClick = jest.fn();
 
     // Render the WaterFallChart component with transactions and onChartClick callback as props
-    const { container } = render(<WaterFallChart transactions={transactions} onChartClick={(e: any) => mockOnClick(e)} />);
+    const { container } = render(
+      <WaterFallChart transactions={transactions} onChartClick={(e: any) => mockOnClick(e)} />
+    );
 
     // Click on a chart bar
     const barZero = container.querySelector('#chartBar-0');

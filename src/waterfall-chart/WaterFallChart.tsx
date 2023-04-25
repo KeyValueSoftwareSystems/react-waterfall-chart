@@ -116,7 +116,7 @@ const WaterFallChart: FC<IWaterfallGraphProps> = (props) => {
             x={(2 * chartElements?.length + 1) * barWidthVal}
             className={`${styles.graphBar} ${styles.summaryGraphBar}`}
             onClick={(): void => onChartClick && onChartClick(summaryChartElement)}
-            id="summaryBar"
+            id='summaryBar'
           />
         )}
       </svg>
