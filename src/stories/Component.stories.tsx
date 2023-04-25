@@ -20,31 +20,31 @@ export const WaterFallChart = Template.bind({});
 WaterFallChart.args = {
   transactions: [
     {
-      label: 'Income',
+      label: 'Revenue',
       value: 10
     },
     {
-      label: 'Expense1',
+      label: 'Interests',
       value: 3
     },
     {
-      label: 'Gain1',
+      label: 'R&D',
       value: -2
     },
     {
-      label: 'Expense2',
+      label: 'Marketing',
       value: -60
     },
     {
-      label: 'Gain2',
+      label: 'Consulting',
       value: 40
     },
     {
-      label: 'Expense3',
+      label: 'Repairs',
       value: -10
     },
     {
-      label: 'Gain3',
+      label: 'Acquisitions',
       value: 80
     }
   ]
