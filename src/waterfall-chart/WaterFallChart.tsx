@@ -1,8 +1,8 @@
 import React, { FC, useEffect, useRef, useState } from 'react';
 import { IWaterfallGraphProps } from '../types/types';
-import { useWaterfallChart } from './utils';
+import useWaterfallChart from './useWaterFallChart';
 import styles from './styles.module.scss';
-import '../index.css';
+
 import {
   DEFAULT_BAR_WIDTH,
   DEFAULT_PIXELS_PER_Y_UNIT,
@@ -52,28 +52,14 @@ const WaterFallChart: FC<IWaterfallGraphProps> = (props) => {
     return () => window.removeEventListener('resize', onWrapperDimensionsChange);
   }, [barWidth, calculateBarWidth]);
 
-  const renderSummaryBar = (): JSX.Element => {
-    const value = Math.abs(chartElements[chartElements?.length - 1]?.cumulativeSum);
-    const barHeight = Math.abs((value / yAxisScale) * yAxisPixelsPerUnit);
-    const chartElement = {
-      name: summaryXLabel,
-      value,
-      yVal: yValueForZeroLine - (value / yAxisScale) * yAxisPixelsPerUnit,
-      cumulativeSum: 0,
-      barHeight: barHeight
-    };
-
-    return (
-      <rect
-        key={FINAL_SUMMARY_GRAPH_KEY}
-        width={barWidthVal}
-        height={chartElement?.barHeight}
-        y={chartElement?.yVal}
-        x={(2 * chartElements?.length + 1) * barWidthVal}
-        className={`${styles.graphBar} ${styles.summaryGraphBar}`}
-        onClick={(): void => onChartClick && onChartClick(chartElement)}
-      />
-    );
+  const summaryValue = Math.abs(chartElements[chartElements?.length - 1]?.cumulativeSum);
+  const summaryBarHeight = Math.abs((summaryValue / yAxisScale) * yAxisPixelsPerUnit);
+  const summaryChartElement = {
+    name: summaryXLabel,
+    value: summaryValue,
+    yVal: yValueForZeroLine - (summaryValue / yAxisScale) * yAxisPixelsPerUnit,
+    cumulativeSum: 0,
+    barHeight: summaryBarHeight
   };
 
   return (
@@ -97,7 +83,7 @@ const WaterFallChart: FC<IWaterfallGraphProps> = (props) => {
         {chartElements?.map((chartElement, index) => (
           <>
             <rect
-              key={chartElement?.name}
+              key={`${chartElement?.name}-bar-graph`}
               width={barWidthVal}
               height={chartElement?.barHeight}
               y={chartElement?.yVal}
@@ -108,7 +94,7 @@ const WaterFallChart: FC<IWaterfallGraphProps> = (props) => {
             />
             {showBridgeLines && (showFinalSummary || index !== chartElements?.length - 1) && (
               <line
-                key={chartElement?.name}
+                key={`${chartElement?.name}-bridge-line`}
                 className={styles.bridgeLine}
                 x1={(2 * index + 2) * barWidthVal}
                 y1={yValueForZeroLine - (chartElement?.cumulativeSum / yAxisScale) * yAxisPixelsPerUnit}
@@ -118,7 +104,17 @@ const WaterFallChart: FC<IWaterfallGraphProps> = (props) => {
             )}
           </>
         ))}
-        {showFinalSummary && renderSummaryBar()}
+        {showFinalSummary && (
+          <rect
+            key={FINAL_SUMMARY_GRAPH_KEY}
+            width={barWidthVal}
+            height={summaryChartElement?.barHeight}
+            y={summaryChartElement?.yVal}
+            x={(2 * chartElements?.length + 1) * barWidthVal}
+            className={`${styles.graphBar} ${styles.summaryGraphBar}`}
+            onClick={(): void => onChartClick && onChartClick(summaryChartElement)}
+          />
+        )}
       </svg>
       <div className={styles.yPoints}>
         {yAxisPoints?.map((yAxisPoint, index) => (
@@ -137,6 +133,7 @@ const WaterFallChart: FC<IWaterfallGraphProps> = (props) => {
             key={transaction?.label}
             className={styles.xPoint}
             style={{ left: (2 * index + 1.25) * barWidthVal }}
+            // the 1.25 is to reduce chances for the label to overflow to right
           >
             {transaction?.label}
           </div>
