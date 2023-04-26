@@ -21,7 +21,6 @@ export type ICustomizationStyles = {
 export type ITransaction = {
   label: string;
   value: number;
-  color?: string;
 };
 
 export type IChartElement = {
