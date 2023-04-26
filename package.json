@@ -21,11 +21,11 @@
   },
   "repository": {
     "type": "github",
-    "url": "git+https://github.com/KeyValueSoftwareSystems/react-star-rating-summary"
+    "url": "git+https://github.com/KeyValueSoftwareSystems/react-waterfall-chart"
   },
   "author": "Keyvalue",
   "license": "ISC",
-  "homepage": "https://github.com/KeyValueSoftwareSystems/react-star-rating-summary",
+  "homepage": "https://github.com/KeyValueSoftwareSystems/react-waterfall-chart",
   "keywords": [
     "library",
     "starter",

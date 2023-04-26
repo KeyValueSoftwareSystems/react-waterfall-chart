@@ -7,7 +7,7 @@
   
 
 <div  align="center">
-<img  src="src/assets/waterfall-chart-example.png"  alt=""  width="784"  height="414"/>
+<img  src="./src/assets/waterfall-chart-example.png"  alt=""  width="784"  height="414"/>
 </div>
 
   
