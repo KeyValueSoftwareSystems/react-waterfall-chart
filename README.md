@@ -62,8 +62,6 @@ The transactions prop is an array of transactions with the following keys:
 
 -  `value` - a number that specifies the transaction quantity
 
-- `color` - the color preference for each transaction. (optional)
-
 An example for transactions array is shown below:
 
   
@@ -72,8 +70,7 @@ An example for transactions array is shown below:
 const  transactionsList = [
 	{
 		label:  'Quarter 1, 2020',
-		value:  1000,
-		color: 'red'
+		value:  1000
 	},
 	{
 		label:  'Quarter 2, 2020',
@@ -121,7 +118,7 @@ You can specify whether to show or hide the scale lines in the Y axis with the h
 <tr>
 <td><code><b>transactions:</b> object[]</code></td>
 <td>
-An array of transaction objects to specifying the value, label and color preference
+An array of transaction objects to specifying the value and label
 </td>
 <td><code>[]</code></td>
 </tr>
