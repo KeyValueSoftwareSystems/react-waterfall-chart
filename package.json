@@ -1,6 +1,6 @@
 {
   "name": "@keyvaluesystems/react-waterfall-chart",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A customizable and responsive svg waterfall chart component",
   "main": "build/index.js",
   "source": "src/index.tsx",
