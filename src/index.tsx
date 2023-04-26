@@ -1,1 +1,3 @@
-import './index.css';
+import WaterFallChart from './waterfall-chart';
+
+export default WaterFallChart;
