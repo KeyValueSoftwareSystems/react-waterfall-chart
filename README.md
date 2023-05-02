@@ -12,7 +12,7 @@
 
   
 
->A customizable & responsive Waterfall chart for react project
+>A customizable & responsive Waterfall chart for React project
 
   
 
@@ -67,16 +67,13 @@ An example for transactions array is shown below:
   
 
 ```jsx
-const  transactionsList = [
-	{
-		label:  'Quarter 1, 2020',
-		value:  1000
-	},
-	{
-		label:  'Quarter 2, 2020',
-		value:  -500
-	}
-]
+const  transactionsList = [{
+    label:  'Quarter 1, 2020',
+    value:  1000
+  },{
+    label:  'Quarter 2, 2020',
+    value:  -500
+  }];
 ```
 
 You can use `barWidth` prop to specify the width of each bar present in the chart. The given value will be converted to pixels (px) and applied to the chart.
@@ -85,10 +82,10 @@ With the help of `showBridgeLines` prop, the line connecting the adjacent bars c
  
 ```jsx
 <WaterfallChart
- transactions={transactionsList}
- barWidth={100}
- showBridgeLines={true}
- showFinalSummary={false}
+  transactions={transactionsList}
+  barWidth={100}
+  showBridgeLines={true}
+  showFinalSummary={false}
 />
 ```
 
@@ -98,8 +95,8 @@ You can specify whether to show or hide the scale lines in the Y axis with the h
 
 ```jsx
 <WaterfallChart
- transactions={transactionsList}
- showYAxisScaleLines={true}
+  transactions={transactionsList}
+  showYAxisScaleLines={true}
 />
 ```
 ## Props
@@ -193,9 +190,9 @@ the below code shows all the overridable styles:
  transactions={transactionsList}
  showYAxisScaleLines={true}
  styles={{
-	 summaryBar: CSSProperties,
-	 positiveBar: CSSProperties,
-	 negativeBar: CSSProperties
+  summaryBar: CSSProperties,
+  positiveBar: CSSProperties,
+  negativeBar: CSSProperties
  }}
 />
 ```
