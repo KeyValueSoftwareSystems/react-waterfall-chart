@@ -26,11 +26,8 @@
   "author": "Keyvalue",
   "license": "ISC",
   "homepage": "https://github.com/KeyValueSoftwareSystems/react-waterfall-chart",
-  "keywords": [
-    "library",
-    "starter",
-    "es6"
-  ],
+  "keywords": ["library", "starter", "es6", "react", 
+  "chart","graph", "react-chart","react-graph", "custom-chart", "svg-chart", "waterfall", "brick-chart", "mario-chart", "waterfall-charts", "bridge-graph"," waterfall-chart", "bridge-chart", "flying-bricks-chart", "flying-brick" ],
   "devDependencies": {
     "@babel/cli": "^7.20.7",
     "@babel/core": "^7.20.12",
