@@ -7,12 +7,12 @@
   
 
 <div  align="center">
-<img  src="src/assets/waterfall-chart-example.png"  alt=""  width="784"  height="414"/>
+<img  src="./src/assets/waterfall-chart-example.png"  alt=""  width="784"  height="414"/>
 </div>
 
   
 
->A customizable & responsive Waterfall chart for react project
+>A customizable & responsive Waterfall chart for React project
 
   
 
@@ -62,24 +62,18 @@ The transactions prop is an array of transactions with the following keys:
 
 -  `value` - a number that specifies the transaction quantity
 
-- `color` - the color preference for each transaction. (optional)
-
 An example for transactions array is shown below:
 
   
 
 ```jsx
-const  transactionsList = [
-	{
-		label:  'Quarter 1, 2020',
-		value:  1000,
-		color: 'red'
-	},
-	{
-		label:  'Quarter 2, 2020',
-		value:  -500
-	}
-]
+const  transactionsList = [{
+    label:  'Quarter 1, 2020',
+    value:  1000
+  },{
+    label:  'Quarter 2, 2020',
+    value:  -500
+  }];
 ```
 
 You can use `barWidth` prop to specify the width of each bar present in the chart. The given value will be converted to pixels (px) and applied to the chart.
@@ -88,10 +82,10 @@ With the help of `showBridgeLines` prop, the line connecting the adjacent bars c
  
 ```jsx
 <WaterfallChart
- transactions={transactionsList}
- barWidth={100}
- showBridgeLines={true}
- showFinalSummary={false}
+  transactions={transactionsList}
+  barWidth={100}
+  showBridgeLines={true}
+  showFinalSummary={false}
 />
 ```
 
@@ -101,8 +95,8 @@ You can specify whether to show or hide the scale lines in the Y axis with the h
 
 ```jsx
 <WaterfallChart
- transactions={transactionsList}
- showYAxisScaleLines={true}
+  transactions={transactionsList}
+  showYAxisScaleLines={true}
 />
 ```
 ## Props
@@ -121,7 +115,7 @@ You can specify whether to show or hide the scale lines in the Y axis with the h
 <tr>
 <td><code><b>transactions:</b> object[]</code></td>
 <td>
-An array of transaction objects to specifying the value, label and color preference
+An array of transaction objects to specifying the value and label
 </td>
 <td><code>[]</code></td>
 </tr>
@@ -196,9 +190,9 @@ the below code shows all the overridable styles:
  transactions={transactionsList}
  showYAxisScaleLines={true}
  styles={{
-	 summaryBar: CSSProperties,
-	 positiveBar: CSSProperties,
-	 negativeBar: CSSProperties
+  summaryBar: CSSProperties,
+  positiveBar: CSSProperties,
+  negativeBar: CSSProperties
  }}
 />
 ```
