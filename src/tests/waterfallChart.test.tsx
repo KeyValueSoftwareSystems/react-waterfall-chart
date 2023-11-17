@@ -13,7 +13,7 @@ const transactions = [
 describe('WaterFallChart component', () => {
   it('renders the chart with correct bars and labels', () => {
     // Render the WaterFallChart component with transactions as props
-    const { container, getByText } = render(<WaterFallChart transactions={transactions} />);
+    const { container, getByText } = render(<WaterFallChart dataPoints={transactions} />);
 
     // Assert that the chart bars are rendered with correct heights
     const positiveBar = container.querySelector('#chartBar-0');
@@ -40,7 +40,7 @@ describe('WaterFallChart component', () => {
 
     // Render the WaterFallChart component with transactions and onChartClick callback as props
     const { container } = render(
-      <WaterFallChart transactions={transactions} onChartClick={(e: any) => mockOnClick(e)} />
+      <WaterFallChart dataPoints={transactions} onChartClick={(e: any) => mockOnClick(e)} />
     );
 
     // Click on a chart bar
@@ -54,7 +54,7 @@ describe('WaterFallChart component', () => {
 
   it('does not render bridge lines when showBridgeLines prop is set to false', () => {
     // Render the WaterFallChart component with showBridgeLines prop set to false
-    const { container } = render(<WaterFallChart transactions={transactions} showBridgeLines={false} />);
+    const { container } = render(<WaterFallChart dataPoints={transactions} showBridgeLines={false} />);
 
     // Assert that the bridge lines are not rendered
     const bridgeLine = container.querySelector('#chartBarBridgeLine-0');
@@ -63,7 +63,7 @@ describe('WaterFallChart component', () => {
 
   it('renders y-axis scale lines when showYAxisScaleLines prop is set to true', () => {
     // Render the WaterFallChart component with showYAxisScaleLines prop set to true
-    const { container } = render(<WaterFallChart transactions={transactions} showYAxisScaleLines={true} />);
+    const { container } = render(<WaterFallChart dataPoints={transactions} showYAxisScaleLines={true} />);
 
     // Assert that y-axis scale lines are rendered
     const yAxisScaleLines = container.querySelectorAll('[id^="yAxisScaleLine-"]');

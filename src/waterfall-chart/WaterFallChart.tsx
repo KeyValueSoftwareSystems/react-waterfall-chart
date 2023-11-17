@@ -13,7 +13,7 @@ import {
 
 const WaterFallChart: FC<IWaterfallGraphProps> = (props) => {
   const {
-    transactions,
+    dataPoints,
     barWidth,
     showBridgeLines = true,
     showYAxisScaleLines = false,
@@ -29,7 +29,7 @@ const WaterFallChart: FC<IWaterfallGraphProps> = (props) => {
   const [barWidthVal, setBarWidthVal] = useState(barWidth ?? DEFAULT_BAR_WIDTH);
 
   const { chartElements, yValueForZeroLine, yAxisPoints, yAxisScale, calculateBarWidth } = useWaterfallChart(
-    transactions,
+    dataPoints,
     wrapperHeight,
     yAxisPixelsPerUnit,
     showFinalSummary
@@ -130,7 +130,7 @@ const WaterFallChart: FC<IWaterfallGraphProps> = (props) => {
         ))}
       </div>
       <div className={classes.xPoints}>
-        {transactions?.map((transaction, index) => (
+        {dataPoints?.map((transaction, index) => (
           <div
             key={transaction?.label}
             className={classes.xPoint}

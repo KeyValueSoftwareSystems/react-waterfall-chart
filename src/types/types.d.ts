@@ -1,7 +1,7 @@
 import { CSSProperties } from 'react';
 
 export type IWaterfallGraphProps = {
-  transactions: Array<ITransaction>;
+  dataPoints: Array<ITransaction>;
   barWidth?: number;
   showBridgeLines?: boolean;
   showYAxisScaleLines?: boolean;
