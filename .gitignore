@@ -7,6 +7,7 @@
 # builds
 /build
 /dist
+/coverage
 .rpt2_cache
 
 # misc
