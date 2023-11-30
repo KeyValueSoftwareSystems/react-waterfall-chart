@@ -1,7 +1,7 @@
 import { CSSProperties } from 'react';
 
 export type IWaterfallGraphProps = {
-  dataPoints: Array<ITransaction>;
+  dataPoints: Array<IDataPoint>;
   barWidth?: number;
   showBridgeLines?: boolean;
   showYAxisScaleLines?: boolean;
@@ -10,6 +10,8 @@ export type IWaterfallGraphProps = {
   summaryXLabel?: string;
   styles?: ICustomizationStyles;
   onChartClick?: IOnChartClick;
+  onMouseEnter?: onMouseEnter;
+  onMouseLeave?: onMouseLeave;
 };
 
 export type ICustomizationStyles = {
@@ -18,7 +20,7 @@ export type ICustomizationStyles = {
   negativeBar?: CSSProperties;
 };
 
-export type ITransaction = {
+export type IDataPoint = {
   label: string;
   value: number;
 };
@@ -47,6 +49,9 @@ export type IGetIntervalAndYPointsReturnType = {
 export type ICalculateBarWidth = (graphWidth: number) => number;
 
 export type IOnChartClick = (chartElement: IChartElement) => void;
+
+export type onMouseEnter = (e: React.MouseEvent<SVGRectElement, MouseEvent>, chartElement: IChartElement) => void;
+export type onMouseLeave = (e: React.MouseEvent<SVGRectElement, MouseEvent>, chartElement: IChartElement) => void;
 
 export enum chartTypes {
   transaction,

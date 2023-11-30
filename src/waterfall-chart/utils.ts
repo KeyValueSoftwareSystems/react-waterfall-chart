@@ -1,6 +1,6 @@
-import { IGetIntervalAndYPointsReturnType, ITransaction } from '../types/types';
+import { IGetIntervalAndYPointsReturnType, IDataPoint } from '../types/types';
 
-export function getLargestCumulativeSum(arr: Array<ITransaction>): number {
+export function getLargestCumulativeSum(arr: Array<IDataPoint>): number {
   let maxSum = arr[0]?.value; // Initialize maxSum and currentSum with the first element of the array
   let currentSum = arr[0]?.value;
 
@@ -13,7 +13,7 @@ export function getLargestCumulativeSum(arr: Array<ITransaction>): number {
   return maxSum;
 }
 
-export function getSmallestCumulativeSum(arr: Array<ITransaction>): number {
+export function getSmallestCumulativeSum(arr: Array<IDataPoint>): number {
   let minSum = arr[0]?.value; // Initialize minSum and currentSum with the first element of the array
   let currentSum = arr[0]?.value;
 
