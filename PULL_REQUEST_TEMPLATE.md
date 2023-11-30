@@ -1,4 +1,4 @@
-<!-- Thank you for contributing to @keyvaluesystems/react-multi-selection-ui-component! -->
+<!-- Thank you for contributing to @keyvaluesystems/react-waterfall-chart! -->
 <!-- Before submitting a pull request, please review our contributing guidelines. -->
 
 ​
