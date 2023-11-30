@@ -1,6 +1,6 @@
 {
   "name": "@keyvaluesystems/react-waterfall-chart",
-  "version": "0.1.5",
+  "version": "1.0.0",
   "description": "A customizable and responsive svg waterfall chart component",
   "main": "build/index.js",
   "source": "src/index.tsx",
@@ -21,10 +21,10 @@
   },
   "repository": {
     "type": "github",
-    "url": "git+https://github.com/KeyValueSoftwareSystems/react-waterfall-chart"
+    "url": "https://github.com/KeyValueSoftwareSystems/react-waterfall-chart"
   },
   "author": "Keyvalue",
-  "license": "ISC",
+  "license": "MIT",
   "homepage": "https://github.com/KeyValueSoftwareSystems/react-waterfall-chart",
   "keywords": [
     "library",
@@ -44,7 +44,7 @@
     "@storybook/addon-links": "^6.5.16",
     "@storybook/builder-webpack5": "^6.5.16",
     "@storybook/manager-webpack5": "^6.5.16",
-    "@storybook/react": "^7.0.7",
+    "@storybook/react": "^6.5.16",
     "@storybook/testing-library": "^0.0.13",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
@@ -90,7 +90,6 @@
     "build"
   ],
   "bugs": {
-    "url": "https://github.com/KeyValueSoftwareSystems/react-vertical-stepper/issues"
-  },
-  "dependencies": {}
+    "url": "https://github.com/KeyValueSoftwareSystems/react-waterfall-chart/issues"
+  }
 }

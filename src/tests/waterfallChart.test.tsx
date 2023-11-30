@@ -4,16 +4,16 @@ import '@testing-library/jest-dom/extend-expect';
 import WaterFallChart from '../waterfall-chart';
 
 // Mock data for transactions
-const transactions = [
-  { label: 'Transaction 1', value: 100 },
-  { label: 'Transaction 2', value: -50 },
-  { label: 'Transaction 3', value: 200 }
+const dataPoints = [
+  { label: 'data 1', value: 100 },
+  { label: 'data 2', value: -50 },
+  { label: 'data 3', value: 200 }
 ];
 
 describe('WaterFallChart component', () => {
   it('renders the chart with correct bars and labels', () => {
     // Render the WaterFallChart component with transactions as props
-    const { container, getByText } = render(<WaterFallChart dataPoints={transactions} />);
+    const { container, getByText } = render(<WaterFallChart dataPoints={dataPoints} />);
 
     // Assert that the chart bars are rendered with correct heights
     const positiveBar = container.querySelector('#chartBar-0');
@@ -40,7 +40,7 @@ describe('WaterFallChart component', () => {
 
     // Render the WaterFallChart component with transactions and onChartClick callback as props
     const { container } = render(
-      <WaterFallChart dataPoints={transactions} onChartClick={(e: any) => mockOnClick(e)} />
+      <WaterFallChart dataPoints={dataPoints} onChartClick={(e: any) => mockOnClick(e)} />
     );
 
     // Click on a chart bar
@@ -54,7 +54,7 @@ describe('WaterFallChart component', () => {
 
   it('does not render bridge lines when showBridgeLines prop is set to false', () => {
     // Render the WaterFallChart component with showBridgeLines prop set to false
-    const { container } = render(<WaterFallChart dataPoints={transactions} showBridgeLines={false} />);
+    const { container } = render(<WaterFallChart dataPoints={dataPoints} showBridgeLines={false} />);
 
     // Assert that the bridge lines are not rendered
     const bridgeLine = container.querySelector('#chartBarBridgeLine-0');
@@ -63,10 +63,45 @@ describe('WaterFallChart component', () => {
 
   it('renders y-axis scale lines when showYAxisScaleLines prop is set to true', () => {
     // Render the WaterFallChart component with showYAxisScaleLines prop set to true
-    const { container } = render(<WaterFallChart dataPoints={transactions} showYAxisScaleLines={true} />);
+    const { container } = render(<WaterFallChart dataPoints={dataPoints} showYAxisScaleLines={true} />);
 
     // Assert that y-axis scale lines are rendered
     const yAxisScaleLines = container.querySelectorAll('[id^="yAxisScaleLine-"]');
     if (yAxisScaleLines?.length > 0) expect(yAxisScaleLines.length).toBeGreaterThan(0);
   });
+
+  it('does not render summary when showFinalSummary prop is set to false', () => {
+    // Render the WaterFallChart component with showYAxisScaleLines prop set to true
+    const { container } = render(<WaterFallChart dataPoints={dataPoints} showFinalSummary={false} />);
+
+    // Assert that y-axis scale lines are rendered
+    const summaryBar = container.querySelector('#summaryBar');
+    expect(summaryBar).toBeNull();
+  });
+
+  it('calls onMouseEnter and onMouseLeavecallback when a bar is hovered', () => {
+    // Mock callback function
+    const mockOnMounseEnter = jest.fn();
+    const mockOnMounseLeave = jest.fn();
+  
+    // Render the WaterFallChart component with transactions and onChartClick callback as props
+    const { container } = render(
+      <WaterFallChart dataPoints={dataPoints}
+        onMouseEnter={(e: any, chartElement) => mockOnMounseEnter(e, chartElement)}
+        onMouseLeave={(e: any, chartElement) => mockOnMounseLeave(e, chartElement)}
+      />
+    );
+  
+    // Click on a chart bar
+    const barZero = container.querySelector('#chartBar-0');
+    if (barZero) {
+      fireEvent.mouseEnter(barZero);
+      // Assert that the mock callback function is called with the correct chart element
+      expect(mockOnMounseEnter).toHaveBeenCalledTimes(1);
+      fireEvent.mouseLeave(barZero);
+      // Assert that the mock callback function is called with the correct chart element
+      expect(mockOnMounseLeave).toHaveBeenCalledTimes(1);
+    }
+  });
 });
+
