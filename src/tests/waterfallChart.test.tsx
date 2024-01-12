@@ -3,17 +3,40 @@ import { render, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import WaterFallChart from '../waterfall-chart';
 
-// Mock data for transactions
+// Mock data for dataPoints
 const dataPoints = [
   { label: 'data 1', value: 100 },
   { label: 'data 2', value: -50 },
   { label: 'data 3', value: 200 }
 ];
 
+const mockOnMouseClick = jest.fn();
+const mockOnMouseEnter = jest.fn();
+const mockOnMouseLeave = jest.fn();
+
+const props = {
+  dataPoints,
+  barWidth: 20,
+  showBridgeLines: true,
+  showYAxisScaleLines: false,
+  yAxisPixelsPerUnit: 30,
+  showFinalSummary: true,
+  summaryXLabel: 'summary',
+  styles: {
+    positiveBar: { fill: 'blue' },
+    negativeBar: { fill: 'red' },
+  },
+  onChartClick: mockOnMouseClick,
+  onMouseEnter: mockOnMouseEnter,
+  onMouseLeave: mockOnMouseLeave
+}
+
 describe('WaterFallChart component', () => {
   it('renders the chart with correct bars and labels', () => {
-    // Render the WaterFallChart component with transactions as props
-    const { container, getByText } = render(<WaterFallChart dataPoints={dataPoints} />);
+    // Render the WaterFallChart component with dataPoints as props
+    const { container, getByText } = render(<WaterFallChart
+      {...props}
+    />);
 
     // Assert that the chart bars are rendered with correct heights
     const positiveBar = container.querySelector('#chartBar-0');
@@ -30,17 +53,41 @@ describe('WaterFallChart component', () => {
     expect(yAxisLine).toBeInTheDocument();
 
     // Assert that the summary label is rendered
+    const summaryLabel = getByText('summary');
+    expect(summaryLabel).toBeInTheDocument();
+  });
+
+  it('does not render the chart with correct bars and labels when data points is empty', () => {
+    // Render the WaterFallChart component with dataPoints as props
+    const { container, getByText } = render(<WaterFallChart
+      dataPoints={[]}
+    />);
+
+    // Assert that the chart bars are rendered with correct heights
+    const positiveBar = container.querySelector('#chartBar-0');
+    const negativeBar = container.querySelector('#chartBar-1');
+    const summaryBar = container.querySelector('#summaryBar');
+    expect(positiveBar).toBeNull();
+    expect(negativeBar).toBeNull();
+    expect(summaryBar).toBeNull();
+
+    // Assert that the x-axis and y-axis lines are rendered
+    const xAxisLine = container.querySelector('#xAxisLine');
+    const yAxisLine = container.querySelector('#yAxisLine');
+    expect(xAxisLine).toBeInTheDocument();
+    expect(yAxisLine).toBeInTheDocument();
+
+    // Assert that the summary label is rendered
     const summaryLabel = getByText('Total');
     expect(summaryLabel).toBeInTheDocument();
   });
 
   it('calls onChartClick callback when a bar is clicked', () => {
     // Mock callback function
-    const mockOnClick = jest.fn();
 
-    // Render the WaterFallChart component with transactions and onChartClick callback as props
+    // Render the WaterFallChart component with dataPoints and onChartClick callback as props
     const { container } = render(
-      <WaterFallChart dataPoints={dataPoints} onChartClick={(e: any) => mockOnClick(e)} />
+      <WaterFallChart {...props} />
     );
 
     // Click on a chart bar
@@ -48,7 +95,58 @@ describe('WaterFallChart component', () => {
     if (barZero) {
       fireEvent.click(barZero);
       // Assert that the mock callback function is called with the correct chart element
-      expect(mockOnClick).toHaveBeenCalledTimes(1);
+      expect(mockOnMouseClick).toHaveBeenCalledTimes(1);
+    }
+  });
+
+  it('calls onMouseEnter and onMouseLeavecallback when a bar is hovered', () => {
+    // Mock callback function
+    const mockOnMounseEnter = jest.fn();
+    const mockOnMounseLeave = jest.fn();
+
+    // Render the WaterFallChart component with dataPoints and onChartClick callback as props
+    const { container } = render(
+      <WaterFallChart dataPoints={dataPoints}
+        onMouseEnter={(e: any, chartElement) => mockOnMounseEnter(e, chartElement)}
+        onMouseLeave={(e: any, chartElement) => mockOnMounseLeave(e, chartElement)}
+      />
+    );
+
+    // Click on a chart bar
+    const barZero = container.querySelector('#chartBar-0');
+    if (barZero) {
+      fireEvent.mouseEnter(barZero);
+      // Assert that the mock callback function is called with the correct chart element
+      expect(mockOnMounseEnter).toHaveBeenCalledTimes(1);
+      fireEvent.mouseLeave(barZero);
+      // Assert that the mock callback function is called with the correct chart element
+      expect(mockOnMounseLeave).toHaveBeenCalledTimes(1);
+    }
+  });
+
+  it('calls onMouseEnter and onMouseLeave callback when a bar is hovered', () => {
+    // Mock callback functions
+    const mockOnMouseEnter = jest.fn();
+    const mockOnMouseLeave = jest.fn();
+
+    // Render the WaterFallChart component with dataPoints and callback props
+    const { container } = render(
+      <WaterFallChart
+        dataPoints={dataPoints}
+        onMouseEnter={(e, chartElement) => mockOnMouseEnter(e, chartElement)}
+        onMouseLeave={(e, chartElement) => mockOnMouseLeave(e, chartElement)}
+      />
+    );
+
+    // Simulate mouse events
+    const barZero = container.querySelector('#chartBar-0');
+    if (barZero) {
+      fireEvent.mouseEnter(barZero);
+      fireEvent.mouseLeave(barZero);
+
+      // Assert that the mock callback functions are called
+      expect(mockOnMouseEnter).toHaveBeenCalledTimes(1);
+      expect(mockOnMouseLeave).toHaveBeenCalledTimes(1);
     }
   });
 
@@ -79,28 +177,62 @@ describe('WaterFallChart component', () => {
     expect(summaryBar).toBeNull();
   });
 
-  it('calls onMouseEnter and onMouseLeavecallback when a bar is hovered', () => {
-    // Mock callback function
-    const mockOnMounseEnter = jest.fn();
-    const mockOnMounseLeave = jest.fn();
-  
-    // Render the WaterFallChart component with transactions and onChartClick callback as props
-    const { container } = render(
-      <WaterFallChart dataPoints={dataPoints}
-        onMouseEnter={(e: any, chartElement) => mockOnMounseEnter(e, chartElement)}
-        onMouseLeave={(e: any, chartElement) => mockOnMounseLeave(e, chartElement)}
-      />
-    );
-  
-    // Click on a chart bar
+  it('sets barWidth based on calculateBarWidth when initialBarWidth is 0 or not defined', () => {
+    // Render the WaterFallChart component with initialBarWidth as 0 or undefined
+    const { container } = render(<WaterFallChart dataPoints={dataPoints} barWidth={0} />);
     const barZero = container.querySelector('#chartBar-0');
+
     if (barZero) {
-      fireEvent.mouseEnter(barZero);
-      // Assert that the mock callback function is called with the correct chart element
-      expect(mockOnMounseEnter).toHaveBeenCalledTimes(1);
-      fireEvent.mouseLeave(barZero);
-      // Assert that the mock callback function is called with the correct chart element
-      expect(mockOnMounseLeave).toHaveBeenCalledTimes(1);
+      expect(barZero).toHaveAttribute('width', '100');
+    }
+  });
+
+  it('handles resize event and recalculates barWidth when initialBarWidth is 0', () => {
+    // Render the WaterFallChart component with initialBarWidth as 0
+    const { container } = render(<WaterFallChart dataPoints={dataPoints} barWidth={0} />);
+    const barZero = container.querySelector('#chartBar-0');
+
+    if (barZero) {
+      fireEvent(window, new Event('resize'));
+      expect(barZero).toHaveAttribute('width', '100');
+    }
+  });
+
+  it('handles resize event and recalculates barWidth when initialBarWidth is less than or equal to 0', () => {
+    // Render the WaterFallChart component with initialBarWidth as -10
+    const { container } = render(<WaterFallChart dataPoints={dataPoints} barWidth={-10} />);
+    const barZero = container.querySelector('#chartBar-0');
+
+    if (barZero) {
+      fireEvent(window, new Event('resize'));
+      expect(barZero).toHaveAttribute('width', '100');
+    }
+  });
+
+  it('does not set barWidth based on calculateBarWidth when initialBarWidth is greater than 0', () => {
+    // Render the WaterFallChart component with initialBarWidth as 50
+    const { container } = render(<WaterFallChart dataPoints={dataPoints} barWidth={50} />);
+    const barZero = container.querySelector('#chartBar-0');
+
+    if (barZero) {
+      expect(barZero).toHaveAttribute('width', '50');
+    }
+  });
+
+  it('calls onChartClick callback when clicking summary bar', () => {
+    // Mock callback function
+    const mockOnClick = jest.fn();
+
+    // Render the WaterFallChart component with onChartClick callback as props
+    const { container } = render(
+      <WaterFallChart dataPoints={dataPoints} onChartClick={(e) => mockOnClick(e)} />
+    );
+
+    // Click on the summary bar
+    const summaryBar = container.querySelector('#summaryBar');
+    if (summaryBar) {
+      fireEvent.click(summaryBar);
+      expect(mockOnClick).toHaveBeenCalledTimes(1);
     }
   });
 });

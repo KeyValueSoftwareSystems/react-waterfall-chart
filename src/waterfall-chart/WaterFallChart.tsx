@@ -27,7 +27,7 @@ const WaterFallChart: FC<IWaterfallGraphProps> = (props) => {
   } = props;
 
   const wrapperRef = useRef<HTMLDivElement | null>(null);
-  const [wrapperHeight, setWrapperHeight] = useState(0);
+  const [wrapperHeight, setWrapperHeight] = useState(wrapperRef?.current?.offsetHeight || 0);
   const [barWidth, setBarWidth] = useState(initialBarWidth);
   const yAxisPixelsPerUnit = initialYAxisPixelsPerUnit ? initialYAxisPixelsPerUnit : DEFAULT_PIXELS_PER_Y_UNIT;
 
