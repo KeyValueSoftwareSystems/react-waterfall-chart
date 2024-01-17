@@ -16,7 +16,7 @@
 
   
 
-Try tweaking a waterfall chart using this codesandbox link <a  href="https://codesandbox.io/s/waterfall-chart-example-uvr8jd">here</a>
+Try tweaking a waterfall chart using this codesandbox link <a  href="https://codesandbox.io/p/sandbox/react-water-fall-chart-nxkyrt">here</a>
 
   
 
@@ -38,7 +38,7 @@ You’ll need to install React separately since it isn't included in the package
 
 ## Usage
 
-React Waterfall chart can run in a very basic mode by just providing the `transactions` like given below:
+React Waterfall chart can run in a very basic mode by just providing the `dataPoints` like given below:
 
   
 
@@ -47,27 +47,27 @@ React Waterfall chart can run in a very basic mode by just providing the `transa
 import  WaterfallChart  from  '@keyvaluesystems/react-waterfall-chart';
 
 <WaterfallChart
-  transactions={transactionList}
+  dataPoints={dataPoints}
 />
 
 ```
 
   
 
-The transactions prop is an array of transactions with the following keys:
+The dataPoints prop is an array of dataPoint with the following keys:
 
   
 
--  `label` - a string to represent each transaction
+-  `label` - a string to represent each dataPoint
 
--  `value` - a number that specifies the transaction quantity
+-  `value` - a number that specifies the dataPoint quantity
 
-An example for transactions array is shown below:
+An example for dataPoint array is shown below:
 
   
 
 ```jsx
-const  transactionsList = [{
+const  dataPoints = [{
     label:  'Quarter 1, 2020',
     value:  1000
   },{
@@ -78,11 +78,11 @@ const  transactionsList = [{
 
 You can use `barWidth` prop to specify the width of each bar present in the chart. The given value will be converted to pixels (px) and applied to the chart.
 With the help of `showBridgeLines` prop, the line connecting the adjacent bars can be shown/hidden.
-`showFinalSummary` can be used to display the summary as the last transaction.
+`showFinalSummary` can be used to display the summary as the last bar.
  
 ```jsx
 <WaterfallChart
-  transactions={transactionsList}
+  dataPoints={dataPoints}
   barWidth={100}
   showBridgeLines={true}
   showFinalSummary={false}
@@ -95,7 +95,7 @@ You can specify whether to show or hide the scale lines in the Y axis with the h
 
 ```jsx
 <WaterfallChart
-  transactions={transactionsList}
+  dataPoints={dataPoints}
   showYAxisScaleLines={true}
 />
 ```
@@ -113,9 +113,9 @@ You can specify whether to show or hide the scale lines in the Y axis with the h
 </thead>
 <tbody>
 <tr>
-<td><code><b>transactions:</b> object[]</code></td>
+<td><code><b>dataPoints:</b> object[]</code></td>
 <td>
-An array of transaction objects to specifying the value and label
+An array of dataPoint objects to specifying the value and label
 </td>
 <td><code>[]</code></td>
 </tr>
@@ -150,7 +150,7 @@ The distance between each y axis scale unit. The value specified will be applied
 <tr>
 <td><code><b>showFinalSummary?:</b> boolean</code></td>
 <td>
-The boolean value to control the display of summary section. The summary will be displayed as the last transaction
+The boolean value to control the display of summary section. The summary will be displayed as the last bar
 </td>
 <td><code>true</code></td>
 </tr>
@@ -160,6 +160,19 @@ The boolean value to control the display of summary section. The summary will be
 The x axis label to be shown for the summary section.
 </td>
 <td><code>Summary</code></td>
+</tr>
+<tr>
+<td><code><b>onMouseEnter?:</b> function</code></td>
+<td>
+The callback function which will be triggered on mouse entering the bars in the waterfall chart. The mouse event and current bar element will be passed as the prop in the function
+</td>
+<td><code>undefined</code></td>
+<tr>
+<td><code><b>onMouseLeave?:</b> function</code></td>
+<td>
+The callback function which will be triggered on mouse leaving the bars in the waterfall chart. The mouse event and current bar element will be passed as the prop in the function
+</td>
+<td><code>undefined</code></td>
 </tr>
 <tr>
 <td><code><b>onChartClick?:</b> function</code></td>
@@ -187,7 +200,7 @@ the below code shows all the overridable styles:
 
 ```jsx
 <WaterfallChart
- transactions={transactionsList}
+ dataPoints={dataPoints}
  showYAxisScaleLines={true}
  styles={{
   summaryBar: CSSProperties,

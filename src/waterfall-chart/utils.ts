@@ -1,6 +1,6 @@
-import { IGetIntervalAndYPointsReturnType, ITransaction } from '../types/types';
+import { IGetIntervalAndYPointsReturnType, IDataPoint } from '../types/types';
 
-export function getLargestCumulativeSum(arr: Array<ITransaction>): number {
+export function getLargestCumulativeSum(arr: Array<IDataPoint>): number {
   let maxSum = arr[0]?.value; // Initialize maxSum and currentSum with the first element of the array
   let currentSum = arr[0]?.value;
 
@@ -13,7 +13,7 @@ export function getLargestCumulativeSum(arr: Array<ITransaction>): number {
   return maxSum;
 }
 
-export function getSmallestCumulativeSum(arr: Array<ITransaction>): number {
+export function getSmallestCumulativeSum(arr: Array<IDataPoint>): number {
   let minSum = arr[0]?.value; // Initialize minSum and currentSum with the first element of the array
   let currentSum = arr[0]?.value;
 
@@ -24,8 +24,7 @@ export function getSmallestCumulativeSum(arr: Array<ITransaction>): number {
     }
   }
 
-  if (minSum > 0) return 0; // if chart never goes below zero then smallest value should be zero
-  return minSum;
+  return minSum > 0 ? 0 : minSum; // if chart never goes below zero then smallest value should be zero
 }
 
 export function roundMinVal(minVal: number, range: number): number {
@@ -69,7 +68,6 @@ export function getIntervalAndYPoints(
 }
 
 export function checkIfScaleSufficient(scale: number, maxLabelsCount: number, valueRange: number): boolean {
-  if (maxLabelsCount === 0) return true; // to stop the while loop from checking for sufficient scale with zero maxLabelsCount
   if (scale * maxLabelsCount >= valueRange) return true;
   return false;
 }

@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef, useState } from 'react';
+import React, { FC, Fragment, useEffect, useRef, useState } from 'react';
 import { IWaterfallGraphProps } from '../types/types';
 import useWaterfallChart from './useWaterFallChart';
 import classes from './styles.module.scss';
@@ -13,23 +13,32 @@ import {
 
 const WaterFallChart: FC<IWaterfallGraphProps> = (props) => {
   const {
-    transactions,
-    barWidth,
+    dataPoints,
+    barWidth: initialBarWidth = DEFAULT_BAR_WIDTH,
     showBridgeLines = true,
     showYAxisScaleLines = false,
-    yAxisPixelsPerUnit = DEFAULT_PIXELS_PER_Y_UNIT,
+    yAxisPixelsPerUnit: initialYAxisPixelsPerUnit,
     showFinalSummary = true,
     summaryXLabel = DEFAULT_SUMMARY_LABEL,
     styles = {},
-    onChartClick
+    onChartClick,
+    onMouseEnter,
+    onMouseLeave
   } = props;
 
   const wrapperRef = useRef<HTMLDivElement | null>(null);
-  const [wrapperHeight, setWrapperHeight] = useState(0);
-  const [barWidthVal, setBarWidthVal] = useState(barWidth ?? DEFAULT_BAR_WIDTH);
+  const [wrapperHeight, setWrapperHeight] = useState(wrapperRef?.current?.offsetHeight || 0);
+  const [barWidth, setBarWidth] = useState(initialBarWidth);
+  const yAxisPixelsPerUnit = initialYAxisPixelsPerUnit ? initialYAxisPixelsPerUnit : DEFAULT_PIXELS_PER_Y_UNIT;
 
-  const { chartElements, yValueForZeroLine, yAxisPoints, yAxisScale, calculateBarWidth } = useWaterfallChart(
-    transactions,
+  const {
+    chartElements,
+    yValueForZeroLine,
+    yAxisPoints,
+    yAxisScale,
+    calculateBarWidth
+  } = useWaterfallChart(
+    dataPoints,
     wrapperHeight,
     yAxisPixelsPerUnit,
     showFinalSummary
@@ -39,7 +48,9 @@ const WaterFallChart: FC<IWaterfallGraphProps> = (props) => {
     const onWrapperDimensionsChange = (): void => {
       if (wrapperRef.current) {
         setWrapperHeight(wrapperRef?.current?.offsetHeight);
-        if (!barWidth || barWidth <= 0) setBarWidthVal(calculateBarWidth(wrapperRef?.current?.offsetWidth));
+        if (!initialBarWidth || initialBarWidth <= 0) {
+          setBarWidth(calculateBarWidth(wrapperRef?.current?.offsetWidth));
+        }
       }
     };
 
@@ -48,7 +59,7 @@ const WaterFallChart: FC<IWaterfallGraphProps> = (props) => {
     window.addEventListener('resize', onWrapperDimensionsChange);
 
     return () => window.removeEventListener('resize', onWrapperDimensionsChange);
-  }, [barWidth, calculateBarWidth]);
+  }, [initialBarWidth, calculateBarWidth]);
 
   const summaryValue = Math.abs(chartElements[chartElements?.length - 1]?.cumulativeSum);
   const summaryBarHeight = Math.abs((summaryValue / yAxisScale) * yAxisPixelsPerUnit);
@@ -61,7 +72,7 @@ const WaterFallChart: FC<IWaterfallGraphProps> = (props) => {
   };
 
   return (
-    <div ref={wrapperRef} className={classes.chartWrapper}>
+    <div ref={wrapperRef} className={classes.chartWrapper} id='graph-svg-wrapper'>
       <svg className={classes.svgContainer}>
         {/* y-axis */}
         <line x1='0' y1='0' x2='0' y2='100%' className={classes.axisLines} id='yAxisLine' />
@@ -80,61 +91,64 @@ const WaterFallChart: FC<IWaterfallGraphProps> = (props) => {
           />
         ))}
         {chartElements?.map((chartElement, index) => (
-          <>
+          <Fragment key={`${chartElement?.name}-bar-graph`}>
             <rect
-              key={`${chartElement?.name}-bar-graph`}
-              width={barWidthVal}
+              width={barWidth}
               height={chartElement?.barHeight}
               y={chartElement?.yVal}
-              x={(2 * index + 1) * barWidthVal}
-              className={`${classes.graphBar} ${chartElement?.value >= 0 ? classes.positiveGraph : classes.negativeGraph}`}
+              x={(2 * index + 1) * barWidth}
+              className={`${classes.graphBar} ${
+                chartElement?.value >= 0 ? classes.positiveGraph : classes.negativeGraph
+              }`}
               style={chartElement?.value >= 0 ? styles?.positiveBar : styles?.negativeBar}
               onClick={(): void => onChartClick && onChartClick(chartElement)}
+              onMouseEnter={(e: React.MouseEvent<SVGRectElement, MouseEvent>):void => onMouseEnter && onMouseEnter(e, chartElement)}
+              onMouseLeave={(e: React.MouseEvent<SVGRectElement, MouseEvent>):void => onMouseLeave && onMouseLeave(e, chartElement)}
               id={`chartBar-${index}`}
+              data-testid={`data-point`}
             />
-            {showBridgeLines && (showFinalSummary || index !== chartElements?.length - 1) && (
+            {showBridgeLines &&
+              (showFinalSummary || index !== chartElements?.length - 1) && (
               <line
                 key={`${chartElement?.name}-bridge-line`}
                 className={classes.bridgeLine}
-                x1={(2 * index + 2) * barWidthVal}
+                x1={(2 * index + 2) * barWidth}
                 y1={yValueForZeroLine - (chartElement?.cumulativeSum / yAxisScale) * yAxisPixelsPerUnit}
-                x2={(2 * index + 3) * barWidthVal}
+                x2={(2 * index + 3) * barWidth}
                 y2={yValueForZeroLine - (chartElement?.cumulativeSum / yAxisScale) * yAxisPixelsPerUnit}
                 id={`chartBarBridgeLine-${index}`}
               />
             )}
-          </>
+          </Fragment>
         ))}
         {showFinalSummary && summaryBarHeight > 0 && (
           <rect
             key={FINAL_SUMMARY_GRAPH_KEY}
-            width={barWidthVal}
+            width={barWidth}
             height={summaryChartElement?.barHeight}
             y={summaryChartElement?.yVal}
-            x={(2 * chartElements?.length + 1) * barWidthVal}
+            x={(2 * chartElements?.length + 1) * barWidth}
             className={`${classes.graphBar} ${classes.summaryGraphBar}`}
             onClick={(): void => onChartClick && onChartClick(summaryChartElement)}
             id='summaryBar'
+            onMouseEnter={(e: React.MouseEvent<SVGRectElement, MouseEvent>):void => onMouseEnter && onMouseEnter(e, summaryChartElement)}
+            onMouseLeave={(e: React.MouseEvent<SVGRectElement, MouseEvent>):void => onMouseLeave && onMouseLeave(e, summaryChartElement)}
           />
         )}
       </svg>
       <div className={classes.yPoints}>
         {yAxisPoints?.map((yAxisPoint, index) => (
-          <div
-            key={yAxisPoint}
-            className={classes.yPoint}
-            style={{ bottom: index * yAxisPixelsPerUnit - 7 }}
-          >
+          <div key={yAxisPoint} className={classes.yPoint} style={{ bottom: index * yAxisPixelsPerUnit - 7 }}>
             {yAxisPoint}
           </div>
         ))}
       </div>
       <div className={classes.xPoints}>
-        {transactions?.map((transaction, index) => (
+        {dataPoints?.map((transaction, index) => (
           <div
             key={transaction?.label}
             className={classes.xPoint}
-            style={{ left: (2 * index + 1.25) * barWidthVal }}
+            style={{ left: (2 * index + 1.25) * barWidth }}
             // the 1.25 is to reduce chances for the label to overflow to right
           >
             {transaction?.label}
@@ -144,7 +158,7 @@ const WaterFallChart: FC<IWaterfallGraphProps> = (props) => {
           <div
             key={FINAL_SUMMARY_X_LABEL_KEY}
             className={classes.xPoint}
-            style={{ ...styles?.summaryBar, left: (2 * chartElements?.length + 1.25) * barWidthVal }}
+            style={{ ...styles?.summaryBar, left: (2 * chartElements?.length + 1.25) * barWidth }}
           >
             {summaryXLabel}
           </div>
