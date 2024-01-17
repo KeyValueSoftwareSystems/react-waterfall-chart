@@ -16,7 +16,7 @@
 
   
 
-Try tweaking a waterfall chart using this codesandbox link <a  href="https://codesandbox.io/s/waterfall-chart-example-uvr8jd">here</a>
+Try tweaking a waterfall chart using this codesandbox link <a  href="https://codesandbox.io/p/sandbox/react-water-fall-chart-nxkyrt">here</a>
 
   
 
@@ -58,9 +58,9 @@ The dataPoints prop is an array of dataPoint with the following keys:
 
   
 
--  `label` - a string to represent each transaction
+-  `label` - a string to represent each dataPoint
 
--  `value` - a number that specifies the transaction quantity
+-  `value` - a number that specifies the dataPoint quantity
 
 An example for dataPoint array is shown below:
 

@@ -7,7 +7,7 @@ const useWaterfallChart = (
   yAxisPixelsPerUnit: number,
   showFinalSummary: boolean
 ): IUseWaterfallChartReturnType => {
-  if (chartHeight <= 0) {
+  if (chartHeight <= 0 || dataPoints?.length === 0) {
     return {
       chartElements: [],
       yValueForZeroLine: 0,

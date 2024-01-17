@@ -59,8 +59,7 @@ const WaterFallChart: FC<IWaterfallGraphProps> = (props) => {
     window.addEventListener('resize', onWrapperDimensionsChange);
 
     return () => window.removeEventListener('resize', onWrapperDimensionsChange);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [initialBarWidth]);
+  }, [initialBarWidth, calculateBarWidth]);
 
   const summaryValue = Math.abs(chartElements[chartElements?.length - 1]?.cumulativeSum);
   const summaryBarHeight = Math.abs((summaryValue / yAxisScale) * yAxisPixelsPerUnit);
