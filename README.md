@@ -78,7 +78,7 @@ const  dataPoints = [{
 
 You can use `barWidth` prop to specify the width of each bar present in the chart. The given value will be converted to pixels (px) and applied to the chart.
 With the help of `showBridgeLines` prop, the line connecting the adjacent bars can be shown/hidden.
-`showFinalSummary` can be used to display the summary as the last transaction.
+`showFinalSummary` can be used to display the summary as the last bar.
  
 ```jsx
 <WaterfallChart
@@ -150,7 +150,7 @@ The distance between each y axis scale unit. The value specified will be applied
 <tr>
 <td><code><b>showFinalSummary?:</b> boolean</code></td>
 <td>
-The boolean value to control the display of summary section. The summary will be displayed as the last transaction
+The boolean value to control the display of summary section. The summary will be displayed as the last bar
 </td>
 <td><code>true</code></td>
 </tr>
