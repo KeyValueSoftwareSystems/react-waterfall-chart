@@ -1,8 +1,7 @@
 import React from 'react';
-import { render, fireEvent, prettyDOM, waitFor } from '@testing-library/react';
+import { render, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import WaterFallChart from '../waterfall-chart';
-import { wait } from '@testing-library/user-event/dist/utils';
 
 // Mock data for dataPoints
 const dataPoints = [
@@ -187,10 +186,8 @@ describe('WaterFallChart component', () => {
     // Render the WaterFallChart component with initialBarWidth as 0 or undefined
     const { container } = render(<WaterFallChart dataPoints={dataPoints} barWidth={0} />);
     fireEvent(window, new Event('resize'));
-    await waitFor(() => {
-      const barZero = container.querySelector('#chartBar-0');
-      expect(barZero).toHaveAttribute('width', '187.5');
-    });
+    const barZero = container.querySelector('#chartBar-0');
+    expect(barZero).toHaveAttribute('width', '187.5');
   });
 
   it('handles resize event and recalculates barWidth when initialBarWidth is 0', () => {
@@ -207,10 +204,8 @@ describe('WaterFallChart component', () => {
     const { container } = render(<WaterFallChart dataPoints={dataPoints} barWidth={-10} />);
     const barZero = container.querySelector('#chartBar-0');
 
-    if (barZero) {
-      fireEvent(window, new Event('resize'));
-      expect(barZero).toHaveAttribute('width', '187.5');
-    }
+    fireEvent(window, new Event('resize'));
+    expect(barZero).toHaveAttribute('width', '187.5');
   });
 
   it('does not set barWidth based on calculateBarWidth when initialBarWidth is greater than 0', () => {
@@ -261,7 +256,7 @@ describe('WaterFallChart component', () => {
     Object.defineProperties(window.HTMLElement.prototype, {
       offsetHeight: {
         get() {
-          return 0.1;
+          return parseFloat(this.style.height) || DEFAULT_OFFSET_HEIGHT;
         }
       },
       offsetWidth: {
